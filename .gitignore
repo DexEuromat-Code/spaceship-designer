@@ -1,0 +1,20 @@
+# Release packages — attach them to a GitHub Release instead of committing
+dist/
+
+# Personal ship projects (not part of the repository)
+Invincible_Pertam_LG.json
+
+# Old test results sheet (replaced by Spaceship_Designer_Test_Results.xlsx)
+tests/manual/SE_Ship_Designer_Test_Results.xlsx
+
+# Excel lock files and Python cache
+~$*
+__pycache__/
+*.pyc
+
+# OS / editor files
+Thumbs.db
+desktop.ini
+.DS_Store
+.vscode/
+.idea/

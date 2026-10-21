@@ -1,0 +1,16 @@
+{
+  "app": "se-ship-designer-palette",
+  "version": 1,
+  "palette": [
+    { "name": "Red", "color": "#e53935" },
+    { "name": "Orange", "color": "#fb8c00" },
+    { "name": "Yellow", "color": "#fdd835" },
+    { "name": "Green", "color": "#43a047" },
+    { "name": "Blue", "color": "#1e88e5" },
+    { "name": "Purple", "color": "#8e24aa" },
+    null,
+    null,
+    null,
+    null
+  ]
+}

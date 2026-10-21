@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spaceship Designer — User Guide</title>
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+
+<div class="topbar" id="top">
+  <div class="brand"><h1>Spaceship <span>Designer</span></h1><div class="subtitle">For Space Engineers</div></div>
+  <span style="color:var(--muted)">User Guide</span>
+  <div class="spacer"></div>
+  <nav class="lang" aria-label="Language">
+    <a href="help.html" class="on" lang="en" aria-current="page">EN</a><a href="help_pl.html" lang="pl">PL</a><a href="help_es.html" lang="es">ES</a>
+  </nav>
+  <a class="btn primary" href="index.html">← Back to app</a>
+</div>
+
+<div class="layout">
+  <nav class="toc" aria-label="Contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#quick-start">Quick start</a></li>
+      <li><a href="#limitations">Design limitations</a></li>
+      <li><a href="#blocks">Creating blocks</a></li>
+      <li><a href="#palette">Block palette &amp; library</a></li>
+      <li><a href="#tools">Tools &amp; options</a></li>
+      <li><a href="#length">Ship length</a></li>
+      <li><a href="#layer-editor">Layer editor</a></li>
+      <li><a href="#top-view">Top view</a></li>
+      <li><a href="#print">Print to PDF</a></li>
+      <li><a href="#files">Saving &amp; loading</a></li>
+      <li><a href="#shortcuts">Keyboard &amp; mouse</a></li>
+      <li><a href="#faq">Tips &amp; FAQ</a></li>
+    </ol>
+    <a class="btn primary" href="index.html">← Back to app</a>
+  </nav>
+
+  <article>
+    <section id="overview">
+      <h2><span class="num">1</span>Overview</h2>
+      <p class="lead">Spaceship Designer is a 2D planning tool for Space Engineers ships. You design the ship slice by slice
+        (layers) from bow to stern and check the result in a top view.</p>
+      <p>Coordinates used throughout the app:</p>
+      <ul>
+        <li><b>Layer</b> — one 33 × 33 cross-section of the ship. Layer 1 is the <b>bow</b>, the last layer is the <b>stern</b>.</li>
+        <li><b>Level</b> — the height inside a layer. Level 33 is the top row of the grid, level 1 the bottom row.</li>
+        <li><b>X</b> — the column (1–33). Column 17 is the ship's center line.</li>
+      </ul>
+      <p>The screen is split into these areas:</p>
+      <div class="layout-map">
+        <div class="full"><b>Title bar</b>Project name, Help, Save to JSON, Load JSON, New project</div>
+        <div><b>Left column</b>Create block · Block palette · Tool · Options · Ship length</div>
+        <div><b>Center</b>Layer editor — the 33 × 33 cross-section of the current layer</div>
+        <div><b>Right column</b>Top view — one level seen from above, Print to PDF</div>
+      </div>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="quick-start">
+      <h2><span class="num">2</span>Quick start</h2>
+      <ol>
+        <li>Type a name for the project in the field in the title bar.</li>
+        <li>Pick the <b>ship length</b> (25–125 layers) and the <b>build direction</b> — from the bow or from the stern.</li>
+        <li>Create a few blocks in <b class="ui">Create block</b> — or load a ready palette with <b class="ui">Load palette</b>.</li>
+        <li>In the layer editor click <b class="ui">Edit</b>, select a block in the palette and paint on the grid.</li>
+        <li>Click <b class="ui">Save</b> to store the layer, then move to the next layer with <b class="ui">▶</b>.</li>
+        <li>Check the shape in the <b>Top view</b> and save the project with <b class="ui">Save to JSON</b>.</li>
+      </ol>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="limitations">
+      <h2><span class="num">3</span>Design limitations</h2>
+      <p>Please keep in mind that:</p>
+      <ol>
+        <li>Designs make no distinction between <b>large grid</b> and <b>small grid</b>.</li>
+        <li>Blocks are always <b>full-size</b> — there is no distinction for half blocks or sloped (angled) blocks.</li>
+        <li>When designing moving blocks such as <b>pistons</b>, it is recommended to use one of the two extreme positions:
+          <b>2 blocks</b> (retracted) or <b>6 blocks</b> (extended).</li>
+        <li>A block cannot be designed at an arbitrary angle (only in the vertical or horizontal plane). If angles are necessary,
+          add suitable notes to the layer that contains the <b>rotor</b> or <b>hinge</b>.</li>
+      </ol>
+      <div class="note">Notes are entered in the <b>Layer notes</b> field under the layer grid — see <a href="#layer-editor">Layer editor</a>.</div>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="blocks">
+      <h2><span class="num">4</span>Creating blocks</h2>
+      <p>A block is a named color you paint with — e.g. “Heavy Armor”, “Glass”, “Thruster”.</p>
+      <h3>New block</h3>
+      <ol>
+        <li>Enter the <b>Block name</b> — up to 25 characters (the counter under the field shows how many are used).</li>
+        <li>Click the color square to choose the <b>Block color</b>. The preview next to it shows the color, the name and the HEX code.</li>
+        <li>Click <b class="ui">Save</b>. The block is placed in the palette:
+          <ul>
+            <li>into the selected slot if it is empty,</li>
+            <li>otherwise into the first free slot on the current page, then anywhere in the library,</li>
+            <li>if all slots are taken — into the library, on a new page (see <a href="#palette">Block palette</a>).</li>
+          </ul>
+        </li>
+      </ol>
+      <h3>Editing a block</h3>
+      <ol>
+        <li>Select the block in the palette.</li>
+        <li>Click <b class="ui">Edit</b> — the name and color are loaded into the form and the slot is marked with ✎.</li>
+        <li>Change what you need and click <b class="ui">Save</b>. All layers using that block are updated immediately.</li>
+        <li>To abandon the change, click <b class="ui">Cancel edit</b>.</li>
+      </ol>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="palette">
+      <h2><span class="num">5</span>Block palette &amp; library</h2>
+      <p>The palette shows 10 slots at a time, numbered <code>01</code>–<code>10</code>. Click a slot to select it as the
+        active block (highlighted with an orange frame). Hover over a slot to see its full name, color and shortcut key.</p>
+      <h3>Library pages</h3>
+      <p>When all visible slots are taken, new blocks are saved to the library on further pages. Once there is more than one page,
+        page controls appear under the palette:</p>
+      <ul>
+        <li><b class="ui">⏮</b> first page, <b class="ui">◀</b> previous page, <b class="ui">▶</b> next page, <b class="ui">⏭</b> last page.</li>
+        <li>Numbering continues across pages: page 2 holds slots <code>11</code>–<code>20</code>, page 3 <code>21</code>–<code>30</code>, and so on.</li>
+        <li>The counter under the palette shows how many blocks are in the library (max. 990).</li>
+      </ul>
+      <h3>Saving and loading a palette</h3>
+      <ul>
+        <li><b class="ui">Save palette</b> — saves the whole library (all pages) to <code>&lt;project&gt;_palette.json</code>.</li>
+        <li><b class="ui">Load palette</b> — replaces the current palette with one from a file. Both palette files and full project files are accepted,
+          so you can reuse the palette of another ship.</li>
+      </ul>
+      <div class="note">Painted cells remember the <b>slot number</b>, not the block itself. If your layers already contain blocks and the new
+        palette has something different in those slots, the app lists the affected slots and asks for confirmation.
+        Best practice: load the palette <b>before</b> you start painting.</div>
+      <p>An example palette with six basic colors is included in <code>examples/basic-colors_palette.json</code>.</p>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="tools">
+      <h2><span class="num">6</span>Tools &amp; options</h2>
+      <div class="table-wrap"><table>
+        <tr><th>Control</th><th>What it does</th></tr>
+        <tr><td><b class="ui">Brush (B)</b></td><td>Paints the selected palette block.</td></tr>
+        <tr><td><b class="ui">Eraser (E)</b></td><td>Clears cells. You can also erase with the right mouse button while the brush is active.</td></tr>
+        <tr><td><b>Left–right symmetry</b></td><td>Every cell you paint or erase is mirrored on the other side of the center line.
+          An orange dashed line through the middle of the grid confirms the option is on. Cells in the center column (17) lie on the axis and are not duplicated.</td></tr>
+        <tr><td><b>Show previous layer</b></td><td>Shows the previous layer (according to the build direction) as a faint, semi-transparent shadow under the current one — helpful for keeping the hull smooth.</td></tr>
+        <tr><td><b class="ui">Bow → Stern</b> / <b class="ui">Stern → Bow</b></td><td><b>Build direction</b> — decides which layer counts as “previous”:
+          <ul>
+            <li><b>Bow → Stern</b> (default): previous = the layer on the bow side (N−1).</li>
+            <li><b>Stern → Bow</b>: previous = the layer on the stern side (N+1).</li>
+          </ul>
+          It affects <b class="ui">Copy previous</b> and <b>Show previous layer</b>. The direction is saved in the project file, and a loaded project
+          opens at the layer where the build starts (layer 1 or the last layer). Layer numbering does not change — layer 1 is always the bow.</td></tr>
+      </table></div>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="length">
+      <h2><span class="num">7</span>Ship length</h2>
+      <p>Choose the number of layers: <b class="ui">25</b> <b class="ui">50</b> <b class="ui">75</b> <b class="ui">100</b> <b class="ui">125</b>.
+        Lengthening the ship adds empty layers at the stern.</p>
+      <div class="note">Shortening the ship deletes the layers beyond the new length. If any of them contain blocks, the app asks for confirmation first.</div>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="layer-editor">
+      <h2><span class="num">8</span>Layer editor</h2>
+      <p>The central 33 × 33 grid is a cross-section of the ship, viewed from the bow toward the stern.
+        The slightly brighter lines mark the center column and center row. The orange dashed frame marks the level currently shown in the top view.
+        Under the grid you can see the X coordinate and level of the cell under the cursor.</p>
+      <h3>Navigation</h3>
+      <ul>
+        <li><b class="ui">⏮</b> first layer (bow), <b class="ui">◀</b> previous, <b class="ui">▶</b> next, <b class="ui">⏭</b> last layer (stern).</li>
+        <li>Type a number in the <b>Layer</b> field to jump directly.</li>
+        <li>Clicking a row in the top view opens that layer as well.</li>
+      </ul>
+      <h3>Buttons</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Button</th><th>What it does</th></tr>
+        <tr><td><b class="ui">Edit</b></td><td>Unlocks the layer for painting. Without it the layer is read-only, which protects it from accidental changes.</td></tr>
+        <tr><td><b class="ui">Save</b></td><td>Stores the layer in the project and locks it again.</td></tr>
+        <tr><td><b class="ui">Copy previous (N)</b></td><td>(while editing) Loads the content of the previous layer into the editor — a quick way to extend a constant hull section.
+          Which layer is “previous” depends on the <a href="#tools">build direction</a>; its number is shown on the button.</td></tr>
+        <tr><td><b class="ui">Copy from layer…</b></td><td>(while editing) Opens a dialog for copying <b>any</b> saved layer — e.g. to repeat an engine section.
+          <ul>
+            <li>While the dialog is open, layer numbers appear next to the top view: saved layers are bright, empty ones dim, the edited layer is orange.</li>
+            <li>Type the source layer number or click its row in the top view. The chosen layer is highlighted in green and the dialog shows how many blocks it has.</li>
+            <li>Click <b class="ui">Copy</b> (or press <kbd>Enter</kbd>); <b class="ui">Cancel</b> or <kbd>Esc</kbd> closes the dialog.</li>
+          </ul></td></tr>
+        <tr><td><b class="ui">Delete</b></td><td>Clears the whole layer, including its notes (after confirmation).</td></tr>
+      </table></div>
+      <h3>Layer notes</h3>
+      <p>The <b>Layer notes</b> field under the grid holds a free-text remark for the current layer (up to 256 characters, the counter shows how many are used),
+        e.g. the swing range of a rotor or hinge — see <a href="#limitations">Design limitations</a>.</p>
+      <ul>
+        <li>The field is read-only until you click <b class="ui">Edit</b>; changing the text marks the layer as “unsaved”.</li>
+        <li><b class="ui">Save</b> stores the notes together with the layer, also in the project JSON file. A layer may hold notes even without blocks.</li>
+        <li><b class="ui">Delete</b> removes the notes as well. <b class="ui">Copy previous</b> and <b class="ui">Copy from layer…</b> copy only the blocks, not the notes.</li>
+      </ul>
+      <h3>Layer status</h3>
+      <ul>
+        <li><b>Empty</b> — nothing saved in this layer.</li>
+        <li><b style="color:var(--ok)">Saved</b> — the layer contains saved blocks.</li>
+        <li><b style="color:var(--accent)">Editing</b> / <b style="color:var(--accent)">Editing • unsaved</b> — edit mode is on; “unsaved” means there are changes not yet saved.</li>
+      </ul>
+      <div class="note">If you leave a layer with unsaved changes, the app asks whether to discard them.</div>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="top-view">
+      <h2><span class="num">9</span>Top view</h2>
+      <p>The top view shows one level of the whole ship from above: 33 columns wide, one row per layer, bow at the top and stern at the bottom.
+        By default the highest level (33) is shown.</p>
+      <ul>
+        <li><b class="ui">⤒</b> highest level, <b class="ui">▲</b> one level up, <b class="ui">▼</b> one level down, <b class="ui">⤓</b> lowest level (1).</li>
+        <li>The current layer of the editor is framed in orange.</li>
+        <li>Dark-blue cells show the <b>silhouette</b> — blocks that exist in that column on other levels — to help you keep orientation.</li>
+        <li>Click any row to open that layer in the editor.</li>
+      </ul>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="print">
+      <h2><span class="num">10</span>Print to PDF</h2>
+      <p>The <b class="ui">Print to PDF</b> button under the top view prints the top view of every level — <b>from the lowest level (1) to the highest (33)</b>, one level per A4 page.</p>
+      <ol>
+        <li>Optionally untick <b>Skip empty levels</b> (ticked by default) if you want all 33 pages.</li>
+        <li>Click <b class="ui">Print to PDF</b>.</li>
+        <li>In the browser's print dialog choose <b>Save as PDF</b> (or <b>Microsoft Print to PDF</b>) as the printer and save the file.</li>
+      </ol>
+      <p>Each page contains the ship name, the level number, column numbers (1–33) and layer numbers, plus a legend of blocks used on that level.
+        Light-gray cells are blocks on other levels.</p>
+      <div class="note">Only saved layers are printed — save the layer you are editing first.
+        For long ships (125 layers) the grid is scaled to fit the page height, so the cells are small.</div>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="files">
+      <h2><span class="num">11</span>Saving &amp; loading</h2>
+      <div class="table-wrap"><table>
+        <tr><th>Button</th><th>What it does</th></tr>
+        <tr><td><b class="ui">Save to JSON</b></td><td>Downloads the whole project (name, length, palette, all saved layers) as <code>&lt;project&gt;.json</code>.</td></tr>
+        <tr><td><b class="ui">Load JSON</b></td><td>Opens a project file and replaces the current project.</td></tr>
+        <tr><td><b class="ui">New project</b></td><td>Clears everything and starts from scratch (after confirmation).</td></tr>
+        <tr><td><b class="ui">Save palette</b> / <b class="ui">Load palette</b></td><td>Palette only — see <a href="#palette">Block palette</a>.</td></tr>
+      </table></div>
+      <div class="note ok">The current project is also saved automatically in your browser after every change and restored the next time you open the app.
+        This is a convenience only — keep important ships as JSON files.</div>
+      <h3>Project file format</h3>
+<pre>{
+  "app": "se-ship-designer",
+  "version": 2,
+  "name": "My ship",
+  "length": 25,
+  "direction": "bow",          // or "stern"
+  "palette": [ { "name": "Heavy Armor", "color": "#7a8a9c" }, null, … ],
+  "layers": [
+    { "layer": 1, "notes": "Rotor: ±45°", "rows": [ [-1,-1,0,0,…], … ] }   // 33 rows × 33 cells; "notes" optional
+  ]
+}</pre>
+      <p>Each cell holds the palette slot index (0 = slot <code>01</code>) or <code>-1</code> for an empty cell. Row 0 is the top level (33).</p>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="shortcuts">
+      <h2><span class="num">12</span>Keyboard &amp; mouse</h2>
+      <div class="table-wrap"><table>
+        <tr><th>Input</th><th>Action</th></tr>
+        <tr><td><kbd>1</kbd> … <kbd>9</kbd>, <kbd>0</kbd></td><td>Select slot 01–10 on the currently displayed palette page (<kbd>0</kbd> = 10th slot).</td></tr>
+        <tr><td><kbd>B</kbd></td><td>Brush</td></tr>
+        <tr><td><kbd>E</kbd></td><td>Eraser</td></tr>
+        <tr><td>Left mouse button (drag)</td><td>Paint with the active tool</td></tr>
+        <tr><td>Right mouse button (drag)</td><td>Erase</td></tr>
+        <tr><td>Click in the top view</td><td>Open that layer in the editor</td></tr>
+      </table></div>
+      <p>Shortcuts are ignored while you type in a text field.</p>
+      <p class="to-top"><a href="#top">↑ Back to top</a></p>
+    </section>
+
+    <section id="faq">
+      <h2><span class="num">13</span>Tips &amp; FAQ</h2>
+      <h3>I can't paint on the grid.</h3>
+      <p>Click <b class="ui">Edit</b> first. Also make sure the selected palette slot contains a block (not “empty”).</p>
+      <h3>My changes disappeared after switching layers.</h3>
+      <p>Layers have to be saved with <b class="ui">Save</b> before you leave them. The app warns you about unsaved changes.</p>
+      <h3>How do I build a long hull section quickly?</h3>
+      <p>Save one layer, go to the next, click <b class="ui">Edit</b> → <b class="ui">Copy previous</b> → <b class="ui">Save</b>, and repeat.
+        If you build from the stern, switch the build direction to <b class="ui">Stern → Bow</b> first and move with <b class="ui">◀</b>.</p>
+      <h3>How do I repeat a section from elsewhere in the ship?</h3>
+      <p>Open the target layer, click <b class="ui">Edit</b> → <b class="ui">Copy from layer…</b>, pick the source layer in the top view and click <b class="ui">Copy</b>.</p>
+      <h3>How do I keep the ship symmetrical?</h3>
+      <p>Turn on <b>Left–right symmetry</b> and paint only one half — the other side is mirrored automatically.</p>
+      <h3>Where does the app keep my work?</h3>
+      <p>In your browser (automatically) and in JSON files you save. Clearing the browser data removes the automatic copy, so save JSON files regularly.</p>
+      <div class="back-row">
+        <a class="btn" href="#top">↑ Back to top</a>
+        <a class="btn primary" href="index.html">← Back to app</a>
+      </div>
+    </section>
+  </article>
+</div>
+
+</body>
+</html>

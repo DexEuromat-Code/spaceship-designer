@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spaceship Designer — Instrukcja obsługi</title>
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+
+<div class="topbar" id="top">
+  <div class="brand"><h1>Spaceship <span>Designer</span></h1><div class="subtitle">For Space Engineers</div></div>
+  <span style="color:var(--muted)">Instrukcja obsługi</span>
+  <div class="spacer"></div>
+  <nav class="lang" aria-label="Język">
+    <a href="help.html" lang="en">EN</a><a href="help_pl.html" class="on" lang="pl" aria-current="page">PL</a><a href="help_es.html" lang="es">ES</a>
+  </nav>
+  <a class="btn primary" href="index.html">← Powrót do aplikacji</a>
+</div>
+
+<div class="layout">
+  <nav class="toc" aria-label="Spis treści">
+    <h2>Spis treści</h2>
+    <ol>
+      <li><a href="#overview">Wprowadzenie</a></li>
+      <li><a href="#quick-start">Szybki start</a></li>
+      <li><a href="#limitations">Ograniczenia projektowe</a></li>
+      <li><a href="#blocks">Tworzenie bloków</a></li>
+      <li><a href="#palette">Paleta i biblioteka bloków</a></li>
+      <li><a href="#tools">Narzędzia i opcje</a></li>
+      <li><a href="#length">Długość statku</a></li>
+      <li><a href="#layer-editor">Edytor warstwy</a></li>
+      <li><a href="#top-view">Widok z góry</a></li>
+      <li><a href="#print">Drukowanie do PDF</a></li>
+      <li><a href="#files">Zapis i wczytywanie</a></li>
+      <li><a href="#shortcuts">Klawiatura i mysz</a></li>
+      <li><a href="#faq">Wskazówki i FAQ</a></li>
+    </ol>
+    <a class="btn primary" href="index.html">← Powrót do aplikacji</a>
+  </nav>
+
+  <article>
+    <section id="overview">
+      <h2><span class="num">1</span>Wprowadzenie</h2>
+      <p class="lead">Spaceship Designer to narzędzie do planowania statków do gry Space Engineers w 2D. Statek projektuje się
+        przekrój po przekroju (warstwami) od dziobu do rufy, a wynik sprawdza się w widoku z góry.</p>
+      <div class="note">Interfejs aplikacji jest w języku angielskim. W tej instrukcji nazwy przycisków i opcji podano
+        w oryginalnym brzmieniu, np. <b class="ui">Save</b>, żeby łatwo było je znaleźć na ekranie.</div>
+      <p>Układ współrzędnych używany w aplikacji:</p>
+      <ul>
+        <li><b>Warstwa (Layer)</b> — jeden przekrój statku o wymiarach 33 × 33. Warstwa 1 to <b>dziób</b>, ostatnia warstwa to <b>rufa</b>.</li>
+        <li><b>Poziom (Level)</b> — wysokość wewnątrz warstwy. Poziom 33 to górny wiersz siatki, poziom 1 — dolny.</li>
+        <li><b>X</b> — kolumna (1–33). Kolumna 17 to oś symetrii statku.</li>
+      </ul>
+      <p>Ekran jest podzielony na następujące obszary:</p>
+      <div class="layout-map">
+        <div class="full"><b>Belka tytułowa</b>Nazwa projektu, Help, Save to JSON, Load JSON, New project</div>
+        <div><b>Lewa kolumna</b>Tworzenie bloku · Paleta bloków · Narzędzie · Opcje · Długość statku</div>
+        <div><b>Środek</b>Edytor warstwy — przekrój 33 × 33 bieżącej warstwy</div>
+        <div><b>Prawa kolumna</b>Widok z góry — jeden poziom widziany z góry, drukowanie do PDF</div>
+      </div>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="quick-start">
+      <h2><span class="num">2</span>Szybki start</h2>
+      <ol>
+        <li>Wpisz nazwę projektu w polu w belce tytułowej.</li>
+        <li>Wybierz <b>długość statku</b> (25–125 warstw) i <b>kierunek budowy</b> — od dziobu lub od rufy.</li>
+        <li>Utwórz kilka bloków w panelu <b class="ui">Create block</b> — albo wczytaj gotową paletę przyciskiem <b class="ui">Load palette</b>.</li>
+        <li>W edytorze warstwy kliknij <b class="ui">Edit</b>, wybierz blok w palecie i maluj na siatce.</li>
+        <li>Kliknij <b class="ui">Save</b>, aby zapisać warstwę, i przejdź do następnej przyciskiem <b class="ui">▶</b>.</li>
+        <li>Sprawdź kształt w <b>widoku z góry</b> i zapisz projekt przyciskiem <b class="ui">Save to JSON</b>.</li>
+      </ol>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="limitations">
+      <h2><span class="num">3</span>Ograniczenia projektowe</h2>
+      <p>Proszę mieć na uwadze, że:</p>
+      <ol>
+        <li>Projekty nie mają rozróżnienia pomiędzy <b>Dużą</b> i <b>Małą skalą</b>.</li>
+        <li>Tworzone bloki są w <b>pełnej wielkości</b> i nie mają rozróżnienia na pół-bloki i bloki kątowe.</li>
+        <li>Przy projektowaniu bloków ruchomych, takich jak np. <b>tłoki</b>, zaleca się stosować jedno z dwóch skrajnych położeń.
+          W tym wypadku <b>2 bloki</b> (złożony) lub <b>6 bloków</b> (rozłożony).</li>
+        <li>Nie ma możliwości zaprojektowania bloku pod zadanym kątem (tylko płaszczyzna pionowa lub pozioma). Jeżeli są konieczne,
+          dodaj odpowiednie notatki do warstwy zawierającej <b>Rotor</b> lub <b>Zawias</b>.</li>
+      </ol>
+      <div class="note">Notatki wpisuje się w polu <b>Layer notes</b> (Uwagi do warstwy) pod siatką edytora — zob. <a href="#layer-editor">Edytor warstwy</a>.</div>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="blocks">
+      <h2><span class="num">4</span>Tworzenie bloków</h2>
+      <p>Blok to nazwany kolor, którym się maluje — np. „Heavy Armor”, „Glass”, „Thruster”.</p>
+      <h3>Nowy blok</h3>
+      <ol>
+        <li>Wpisz <b>nazwę bloku</b> (Block name) — do 25 znaków (licznik pod polem pokazuje, ile zostało użytych).</li>
+        <li>Kliknij kwadrat koloru, aby wybrać <b>kolor bloku</b> (Block color). Podgląd obok pokazuje kolor, nazwę i kod HEX.</li>
+        <li>Kliknij <b class="ui">Save</b>. Blok trafia do palety:
+          <ul>
+            <li>do zaznaczonego slotu, jeśli jest pusty,</li>
+            <li>w przeciwnym razie do pierwszego wolnego slotu na bieżącej stronie, a potem w dowolnym miejscu biblioteki,</li>
+            <li>jeśli wszystkie sloty są zajęte — do biblioteki, na nową stronę (zob. <a href="#palette">Paleta bloków</a>).</li>
+          </ul>
+        </li>
+      </ol>
+      <h3>Edycja bloku</h3>
+      <ol>
+        <li>Zaznacz blok w palecie.</li>
+        <li>Kliknij <b class="ui">Edit</b> — nazwa i kolor zostaną wczytane do formularza, a slot oznaczony symbolem ✎.</li>
+        <li>Wprowadź zmiany i kliknij <b class="ui">Save</b>. Wszystkie warstwy używające tego bloku zostaną od razu zaktualizowane.</li>
+        <li>Aby zrezygnować ze zmian, kliknij <b class="ui">Cancel edit</b>.</li>
+      </ol>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="palette">
+      <h2><span class="num">5</span>Paleta i biblioteka bloków</h2>
+      <p>Paleta pokazuje jednocześnie 10 slotów, ponumerowanych <code>01</code>–<code>10</code>. Kliknij slot, aby wybrać go jako
+        aktywny blok (zostanie obramowany na pomarańczowo). Po najechaniu kursorem na slot widać pełną nazwę, kolor i klawisz skrótu.</p>
+      <h3>Strony biblioteki</h3>
+      <p>Gdy wszystkie widoczne sloty są zajęte, nowe bloki zapisywane są w bibliotece na kolejnych stronach. Gdy istnieje więcej niż jedna strona,
+        pod paletą pojawiają się kontrolki stron:</p>
+      <ul>
+        <li><b class="ui">⏮</b> pierwsza strona, <b class="ui">◀</b> poprzednia, <b class="ui">▶</b> następna, <b class="ui">⏭</b> ostatnia.</li>
+        <li>Numeracja jest ciągła: strona 2 zawiera sloty <code>11</code>–<code>20</code>, strona 3 — <code>21</code>–<code>30</code> itd.</li>
+        <li>Licznik pod paletą pokazuje liczbę bloków w bibliotece (maks. 990).</li>
+      </ul>
+      <h3>Zapis i wczytywanie palety</h3>
+      <ul>
+        <li><b class="ui">Save palette</b> — zapisuje całą bibliotekę (wszystkie strony) do pliku <code>&lt;projekt&gt;_palette.json</code>.</li>
+        <li><b class="ui">Load palette</b> — zastępuje bieżącą paletę paletą z pliku. Akceptowane są zarówno pliki palety, jak i pełne pliki projektu,
+          więc można przenieść paletę z innego statku.</li>
+      </ul>
+      <div class="note">Pomalowane komórki pamiętają <b>numer slotu</b>, a nie sam blok. Jeśli warstwy zawierają już bloki, a nowa paleta
+        ma w tych slotach coś innego, aplikacja wypisze numery tych slotów i poprosi o potwierdzenie.
+        Dobra praktyka: wczytaj paletę <b>przed</b> rozpoczęciem malowania.</div>
+      <p>Przykładowa paleta z sześcioma podstawowymi kolorami znajduje się w pliku <code>examples/basic-colors_palette.json</code>.</p>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="tools">
+      <h2><span class="num">6</span>Narzędzia i opcje</h2>
+      <div class="table-wrap"><table>
+        <tr><th>Element</th><th>Działanie</th></tr>
+        <tr><td><b class="ui">Brush (B)</b></td><td>Pędzel — maluje wybranym blokiem z palety.</td></tr>
+        <tr><td><b class="ui">Eraser (E)</b></td><td>Gumka — czyści komórki. Przy aktywnym pędzlu można też wymazywać prawym przyciskiem myszy.</td></tr>
+        <tr><td><b>Left–right symmetry</b></td><td>Symetria lewo–prawo — każda malowana lub wymazywana komórka jest odbijana po drugiej stronie osi.
+          Pomarańczowa przerywana linia przez środek siatki potwierdza włączenie opcji. Komórki w środkowej kolumnie (17) leżą na osi i nie są duplikowane.</td></tr>
+        <tr><td><b>Show previous layer</b></td><td>Podgląd poprzedniej warstwy (zgodnie z kierunkiem budowy) — pokazuje ją jako blady, półprzezroczysty cień pod bieżącą warstwą; pomaga zachować gładki kształt kadłuba.</td></tr>
+        <tr><td><b class="ui">Bow → Stern</b> / <b class="ui">Stern → Bow</b></td><td><b>Kierunek budowy (Build direction)</b> — określa, która warstwa jest „poprzednia”:
+          <ul>
+            <li><b>Bow → Stern</b> (domyślnie, od dziobu do rufy): poprzednia = warstwa od strony dziobu (N−1).</li>
+            <li><b>Stern → Bow</b> (od rufy do dziobu): poprzednia = warstwa od strony rufy (N+1).</li>
+          </ul>
+          Ustawienie wpływa na <b class="ui">Copy previous</b> i <b>Show previous layer</b>. Kierunek jest zapisywany w pliku projektu, a wczytany projekt
+          otwiera się na warstwie, od której zaczyna się budowa (warstwa 1 lub ostatnia). Numeracja warstw się nie zmienia — warstwa 1 to zawsze dziób.</td></tr>
+      </table></div>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="length">
+      <h2><span class="num">7</span>Długość statku</h2>
+      <p>Wybierz liczbę warstw: <b class="ui">25</b> <b class="ui">50</b> <b class="ui">75</b> <b class="ui">100</b> <b class="ui">125</b>.
+        Wydłużenie statku dodaje puste warstwy od strony rufy.</p>
+      <div class="note">Skrócenie statku usuwa warstwy wykraczające poza nową długość. Jeśli któraś z nich zawiera bloki, aplikacja najpierw poprosi o potwierdzenie.</div>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="layer-editor">
+      <h2><span class="num">8</span>Edytor warstwy</h2>
+      <p>Środkowa siatka 33 × 33 to przekrój statku widziany od dziobu w stronę rufy.
+        Nieco jaśniejsze linie oznaczają środkową kolumnę i środkowy wiersz. Pomarańczowa przerywana ramka wskazuje poziom aktualnie pokazany w widoku z góry.
+        Pod siatką widać współrzędną X i poziom komórki pod kursorem.</p>
+      <h3>Nawigacja</h3>
+      <ul>
+        <li><b class="ui">⏮</b> pierwsza warstwa (dziób), <b class="ui">◀</b> poprzednia, <b class="ui">▶</b> następna, <b class="ui">⏭</b> ostatnia warstwa (rufa).</li>
+        <li>Wpisz numer w polu <b>Layer</b>, aby przejść bezpośrednio do warstwy.</li>
+        <li>Kliknięcie wiersza w widoku z góry również otwiera daną warstwę.</li>
+      </ul>
+      <h3>Przyciski</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Przycisk</th><th>Działanie</th></tr>
+        <tr><td><b class="ui">Edit</b></td><td>Odblokowuje warstwę do malowania. Bez tego warstwa jest tylko do podglądu, co chroni ją przed przypadkowymi zmianami.</td></tr>
+        <tr><td><b class="ui">Save</b></td><td>Zapisuje warstwę w projekcie i ponownie ją blokuje.</td></tr>
+        <tr><td><b class="ui">Copy previous (N)</b></td><td>(w trybie edycji) Wczytuje do edytora zawartość poprzedniej warstwy — szybki sposób na przedłużenie odcinka kadłuba o stałym przekroju.
+          To, która warstwa jest „poprzednia”, zależy od <a href="#tools">kierunku budowy</a>; jej numer widać na przycisku.</td></tr>
+        <tr><td><b class="ui">Copy from layer…</b></td><td>(w trybie edycji) Otwiera okno kopiowania <b>dowolnej</b> zapisanej warstwy — np. żeby powtórzyć sekcję silnika.
+          <ul>
+            <li>Gdy okno jest otwarte, obok widoku z góry pojawiają się numery warstw: zapisane są jasne, puste przygaszone, edytowana — pomarańczowa.</li>
+            <li>Wpisz numer warstwy źródłowej albo kliknij jej wiersz w widoku z góry. Wybrana warstwa jest podświetlona na zielono, a okno pokazuje liczbę jej bloków.</li>
+            <li>Kliknij <b class="ui">Copy</b> (lub naciśnij <kbd>Enter</kbd>); <b class="ui">Cancel</b> lub <kbd>Esc</kbd> zamyka okno.</li>
+          </ul></td></tr>
+        <tr><td><b class="ui">Delete</b></td><td>Czyści całą warstwę razem z jej uwagami (po potwierdzeniu).</td></tr>
+      </table></div>
+      <h3>Uwagi do warstwy (Layer notes)</h3>
+      <p>Pole <b>Layer notes</b> pod siatką służy do wpisania uwag do bieżącej warstwy (maksymalnie 256 znaków, licznik pokazuje liczbę użytych),
+        np. zakresu wychyleń rotoru lub zawiasu — zob. <a href="#limitations">Ograniczenia projektowe</a>.</p>
+      <ul>
+        <li>Pole jest tylko do odczytu, dopóki nie klikniesz <b class="ui">Edit</b>; zmiana tekstu oznacza warstwę jako „unsaved”.</li>
+        <li><b class="ui">Save</b> zapisuje uwagi razem z warstwą, również w pliku JSON projektu. Warstwa może mieć uwagi nawet bez bloków.</li>
+        <li><b class="ui">Delete</b> usuwa także uwagi. <b class="ui">Copy previous</b> i <b class="ui">Copy from layer…</b> kopiują tylko bloki, bez uwag.</li>
+      </ul>
+      <h3>Status warstwy</h3>
+      <ul>
+        <li><b>Empty</b> — w warstwie nic nie zapisano.</li>
+        <li><b style="color:var(--ok)">Saved</b> — warstwa zawiera zapisane bloki.</li>
+        <li><b style="color:var(--accent)">Editing</b> / <b style="color:var(--accent)">Editing • unsaved</b> — tryb edycji jest włączony; „unsaved” oznacza niezapisane zmiany.</li>
+      </ul>
+      <div class="note">Jeśli opuszczasz warstwę z niezapisanymi zmianami, aplikacja zapyta, czy je porzucić.</div>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="top-view">
+      <h2><span class="num">9</span>Widok z góry</h2>
+      <p>Widok z góry pokazuje jeden poziom całego statku: 33 kolumny szerokości, jeden wiersz na każdą warstwę, dziób na górze, rufa na dole.
+        Domyślnie wyświetlany jest najwyższy poziom (33).</p>
+      <ul>
+        <li><b class="ui">⤒</b> najwyższy poziom, <b class="ui">▲</b> poziom wyżej, <b class="ui">▼</b> poziom niżej, <b class="ui">⤓</b> najniższy poziom (1).</li>
+        <li>Bieżąca warstwa edytora jest obramowana na pomarańczowo.</li>
+        <li>Ciemnoniebieskie pola pokazują <b>sylwetkę</b> — bloki istniejące w tej kolumnie na innych poziomach — ułatwiają orientację.</li>
+        <li>Kliknij dowolny wiersz, aby otworzyć tę warstwę w edytorze.</li>
+      </ul>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="print">
+      <h2><span class="num">10</span>Drukowanie do PDF</h2>
+      <p>Przycisk <b class="ui">Print to PDF</b> pod widokiem z góry drukuje widok z góry każdego poziomu — <b>od najniższego (1) do najwyższego (33)</b>, jeden poziom na stronę A4.</p>
+      <ol>
+        <li>Opcjonalnie odznacz <b>Skip empty levels</b> (domyślnie zaznaczone — pomija puste poziomy), jeśli chcesz wydrukować wszystkie 33 strony.</li>
+        <li>Kliknij <b class="ui">Print to PDF</b>.</li>
+        <li>W oknie drukowania przeglądarki wybierz jako drukarkę <b>Zapisz jako PDF</b> (lub <b>Microsoft Print to PDF</b>) i zapisz plik.</li>
+      </ol>
+      <p>Każda strona zawiera nazwę statku, numer poziomu, numery kolumn (1–33) i warstw oraz legendę bloków użytych na danym poziomie.
+        Jasnoszare pola to bloki na innych poziomach.</p>
+      <div class="note">Drukowane są tylko zapisane warstwy — najpierw zapisz edytowaną warstwę.
+        Przy długich statkach (125 warstw) siatka jest skalowana do wysokości strony, więc komórki są małe.</div>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="files">
+      <h2><span class="num">11</span>Zapis i wczytywanie</h2>
+      <div class="table-wrap"><table>
+        <tr><th>Przycisk</th><th>Działanie</th></tr>
+        <tr><td><b class="ui">Save to JSON</b></td><td>Pobiera cały projekt (nazwę, długość, paletę i wszystkie zapisane warstwy) jako plik <code>&lt;projekt&gt;.json</code>.</td></tr>
+        <tr><td><b class="ui">Load JSON</b></td><td>Otwiera plik projektu i zastępuje nim bieżący projekt.</td></tr>
+        <tr><td><b class="ui">New project</b></td><td>Czyści wszystko i zaczyna od nowa (po potwierdzeniu).</td></tr>
+        <tr><td><b class="ui">Save palette</b> / <b class="ui">Load palette</b></td><td>Tylko paleta — zob. <a href="#palette">Paleta bloków</a>.</td></tr>
+      </table></div>
+      <div class="note ok">Bieżący projekt jest też automatycznie zapisywany w przeglądarce po każdej zmianie i przywracany przy następnym otwarciu aplikacji.
+        To tylko ułatwienie — ważne statki przechowuj w plikach JSON.</div>
+      <h3>Format pliku projektu</h3>
+<pre>{
+  "app": "se-ship-designer",
+  "version": 2,
+  "name": "Mój statek",
+  "length": 25,
+  "direction": "bow",          // lub "stern"
+  "palette": [ { "name": "Heavy Armor", "color": "#7a8a9c" }, null, … ],
+  "layers": [
+    { "layer": 1, "notes": "Rotor: ±45°", "rows": [ [-1,-1,0,0,…], … ] }   // 33 wiersze × 33 komórki; "notes" opcjonalne
+  ]
+}</pre>
+      <p>Każda komórka zawiera indeks slotu palety (0 = slot <code>01</code>) lub <code>-1</code> dla pustej komórki. Wiersz 0 to najwyższy poziom (33).</p>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="shortcuts">
+      <h2><span class="num">12</span>Klawiatura i mysz</h2>
+      <div class="table-wrap"><table>
+        <tr><th>Wejście</th><th>Działanie</th></tr>
+        <tr><td><kbd>1</kbd> … <kbd>9</kbd>, <kbd>0</kbd></td><td>Wybór slotu 01–10 na aktualnie wyświetlanej stronie palety (<kbd>0</kbd> = 10. slot).</td></tr>
+        <tr><td><kbd>B</kbd></td><td>Pędzel</td></tr>
+        <tr><td><kbd>E</kbd></td><td>Gumka</td></tr>
+        <tr><td>Lewy przycisk myszy (przeciąganie)</td><td>Malowanie aktywnym narzędziem</td></tr>
+        <tr><td>Prawy przycisk myszy (przeciąganie)</td><td>Wymazywanie</td></tr>
+        <tr><td>Kliknięcie w widoku z góry</td><td>Otwarcie danej warstwy w edytorze</td></tr>
+      </table></div>
+      <p>Skróty nie działają podczas wpisywania tekstu w polach.</p>
+      <p class="to-top"><a href="#top">↑ Do góry</a></p>
+    </section>
+
+    <section id="faq">
+      <h2><span class="num">13</span>Wskazówki i FAQ</h2>
+      <h3>Nie mogę malować na siatce.</h3>
+      <p>Najpierw kliknij <b class="ui">Edit</b>. Upewnij się też, że wybrany slot palety zawiera blok (nie jest „empty”).</p>
+      <h3>Moje zmiany zniknęły po przejściu do innej warstwy.</h3>
+      <p>Warstwę trzeba zapisać przyciskiem <b class="ui">Save</b> przed jej opuszczeniem. Aplikacja ostrzega o niezapisanych zmianach.</p>
+      <h3>Jak szybko zbudować długi odcinek kadłuba?</h3>
+      <p>Zapisz jedną warstwę, przejdź do następnej, kliknij <b class="ui">Edit</b> → <b class="ui">Copy previous</b> → <b class="ui">Save</b> i powtarzaj.
+        Jeśli budujesz od rufy, najpierw przełącz kierunek budowy na <b class="ui">Stern → Bow</b> i przechodź między warstwami przyciskiem <b class="ui">◀</b>.</p>
+      <h3>Jak powtórzyć sekcję z innego miejsca statku?</h3>
+      <p>Otwórz warstwę docelową, kliknij <b class="ui">Edit</b> → <b class="ui">Copy from layer…</b>, wybierz warstwę źródłową w widoku z góry i kliknij <b class="ui">Copy</b>.</p>
+      <h3>Jak zachować symetrię statku?</h3>
+      <p>Włącz <b>Left–right symmetry</b> i maluj tylko jedną połowę — druga strona zostanie odbita automatycznie.</p>
+      <h3>Gdzie aplikacja przechowuje moją pracę?</h3>
+      <p>W przeglądarce (automatycznie) oraz w zapisanych plikach JSON. Wyczyszczenie danych przeglądarki usuwa automatyczną kopię, dlatego regularnie zapisuj pliki JSON.</p>
+      <div class="back-row">
+        <a class="btn" href="#top">↑ Do góry</a>
+        <a class="btn primary" href="index.html">← Powrót do aplikacji</a>
+      </div>
+    </section>
+  </article>
+</div>
+
+</body>
+</html>

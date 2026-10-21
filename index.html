@@ -1,0 +1,1080 @@
+<!doctype html>
+<!--
+  Spaceship Designer — for Space Engineers
+  Copyright (c) 2026 Dex Euromat
+  Released under the MIT License — see the LICENSE file.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spaceship Designer</title>
+<style>
+  :root {
+    --bg: #0b1017;
+    --panel: #121a24;
+    --panel-2: #18222f;
+    --border: #253244;
+    --text: #dbe4ee;
+    --muted: #8193a8;
+    --accent: #f5a524;
+    --accent-ink: #1a1203;
+    --danger: #e5484d;
+    --ok: #3dd68c;
+    --cell-empty: #0e151e;
+    --grid-line: #1d2836;
+    --grid-center: #3a4b61;
+    --silhouette: #1f2e40;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text);
+    font: 14px/1.4 "Segoe UI", system-ui, -apple-system, sans-serif; }
+  header { display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+    padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--panel); }
+  header .brand { margin-right: 12px; line-height: 1.15; }
+  header h1 { font-size: 16px; margin: 0; letter-spacing: .04em; text-transform: uppercase; }
+  header .subtitle { font-size: 11px; color: var(--muted); letter-spacing: .06em; }
+  header h1 span { color: var(--accent); }
+  header .spacer { flex: 1; }
+  main { display: grid; grid-template-columns: 300px minmax(0, 1fr) 380px; gap: 16px; padding: 16px; align-items: start; }
+  @media (max-width: 1150px) { main { grid-template-columns: 1fr; } }
+  .col { display: flex; flex-direction: column; gap: 16px; }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+  .panel h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 10px; }
+  .panel h2.sep { margin-top: 18px; }
+  label { display: block; color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+  input[type=text], input[type=number] { width: 100%; background: var(--panel-2); color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px; padding: 7px 9px; font: inherit; }
+  input[type=text]:focus, input[type=number]:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  header input[type=text] { width: 220px; }
+  .field { margin-bottom: 12px; }
+  .counter { font-size: 11px; color: var(--muted); text-align: right; margin-top: 3px; }
+  .counter.full { color: var(--accent); }
+  button { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-radius: 6px;
+    padding: 7px 12px; font: inherit; cursor: pointer; }
+  button:hover:not(:disabled) { border-color: var(--accent); }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+  button.danger:hover:not(:disabled) { border-color: var(--danger); color: #ffb3b5; }
+  button.icon { padding: 5px 9px; min-width: 34px; }
+  a.btn-link { display: inline-block; background: var(--panel-2); color: var(--text); border: 1px solid var(--border);
+    border-radius: 6px; padding: 7px 12px; text-decoration: none; }
+  a.btn-link:hover { border-color: var(--accent); }
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btns > button { flex: 1; }
+
+  /* Block panel */
+  .color-row { display: flex; gap: 10px; align-items: stretch; }
+  input[type=color] { width: 54px; height: 54px; padding: 0; border: 1px solid var(--border); border-radius: 8px;
+    background: var(--panel-2); cursor: pointer; }
+  .preview { flex: 1; display: flex; align-items: center; gap: 10px; background: var(--panel-2);
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px; min-width: 0; }
+  .preview .swatch { width: 36px; height: 36px; border-radius: 4px; flex: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.15); }
+  .preview .meta { min-width: 0; }
+  .preview .meta b { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .preview .meta code { color: var(--muted); font-size: 12px; }
+  .hint { font-size: 12px; color: var(--muted); margin: 10px 0 0; min-height: 1.4em; }
+  .hint.edit { color: var(--accent); }
+
+  /* Palette */
+  #palette { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .slot { display: flex; align-items: center; gap: 8px; text-align: left; padding: 6px 8px; min-width: 0; }
+  .slot .sw { width: 22px; height: 22px; border-radius: 4px; flex: none; box-shadow: inset 0 0 0 1px rgba(255,255,255,.15); }
+  .slot .sw.empty { background: repeating-linear-gradient(45deg, #1a2433 0 4px, #121a24 4px 8px); }
+  .slot .nm { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; }
+  .slot .key { font-size: 10px; color: var(--muted); margin-left: auto; flex: none; }
+  .slot.empty .nm { color: var(--muted); font-style: italic; }
+  .slot.active { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .pager { display: flex; align-items: center; gap: 6px; margin-top: 10px; }
+  .pager[hidden] { display: none; }
+  .pager .pinfo { flex: 1; text-align: center; font-size: 12px; color: var(--muted); }
+  .pager .pinfo b { color: var(--text); }
+  .lib-info { font-size: 11px; color: var(--muted); margin-top: 6px; text-align: right; }
+  .seg { display: flex; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .seg button { flex: 1; border: 0; border-radius: 0; border-right: 1px solid var(--border); }
+  .seg button:last-child { border-right: 0; }
+  .seg button.on { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+  .checks { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; font-size: 13px; }
+  .checks label { display: flex; align-items: center; gap: 8px; color: var(--text); font-size: 13px; margin: 0; cursor: pointer; }
+
+  /* Grids */
+  .navbar { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .navbar .pos { display: flex; align-items: center; gap: 6px; margin: 0 6px; }
+  .navbar input[type=number] { width: 70px; text-align: center; }
+  .badge { font-size: 11px; padding: 3px 8px; border-radius: 99px; border: 1px solid var(--border); color: var(--muted); }
+  .badge.saved { color: var(--ok); border-color: rgba(61,214,140,.4); }
+  .badge.editing { color: var(--accent); border-color: rgba(245,165,36,.5); }
+  .canvas-wrap { position: relative; max-width: 594px; margin: 0 auto; }
+  #layerCanvas { display: block; width: 100%; height: auto; border-radius: 6px; touch-action: none; cursor: not-allowed; }
+  #layerCanvas.editing { cursor: crosshair; }
+  .notes-field { max-width: 594px; margin: 0 auto 12px; }
+  .notes-head { display: flex; justify-content: space-between; align-items: baseline; }
+  .notes-head .counter { margin: 0; }
+  #layerNotes { width: 100%; resize: vertical; min-height: 52px; background: var(--panel-2); color: var(--text);
+    border: 1px solid var(--border); border-radius: 6px; padding: 7px 9px; font: inherit; }
+  #layerNotes:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+  #layerNotes[readonly] { color: var(--muted); cursor: default; }
+  #layerNotes[readonly]:focus { outline: none; }
+  .coords { font-size: 12px; color: var(--muted); text-align: center; margin: 6px 0 10px; min-height: 1.4em; }
+  .top-scroll { max-height: calc(100vh - 230px); min-height: 200px; overflow: auto; border-radius: 6px; }
+  #topCanvas { display: block; width: 100%; height: auto; cursor: pointer; }
+  .end-label { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); text-align: center; padding: 4px 0; }
+
+  #toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%) translateY(20px); opacity: 0;
+    background: var(--panel-2); border: 1px solid var(--accent); color: var(--text); padding: 9px 16px;
+    border-radius: 8px; transition: .2s; pointer-events: none; max-width: calc(100vw - 32px); }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #copyDlg { position: fixed; top: 140px; margin: 0 auto; width: min(360px, calc(100vw - 32px)); z-index: 20;
+    background: var(--panel); color: var(--text); border: 1px solid var(--accent); border-radius: 10px;
+    padding: 16px; box-shadow: 0 12px 40px rgba(0,0,0,.6); }
+  #copyDlg h3 { margin: 0 0 8px; font-size: 16px; }
+  #copyDlg .dlg-text { font-size: 13px; color: var(--muted); margin: 0 0 12px; }
+  #copyDlg .dlg-text b { color: var(--text); }
+  #copyDlg .dlg-status { font-size: 13px; min-height: 1.4em; margin: 6px 0 12px; color: var(--muted); }
+  #copyDlg .dlg-status.ok { color: var(--ok); }
+  #copyDlg .dlg-status.bad { color: #ff8a8d; }
+  .print-row { display: flex; align-items: center; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+  .print-row label { display: flex; align-items: center; gap: 6px; margin: 0; color: var(--text); font-size: 13px; cursor: pointer; }
+  .print-row button { margin-left: auto; }
+
+  /* Print: only the top-view pages, one level per A4 page */
+  #printArea { display: none; }
+  @media print {
+    @page { size: A4 portrait; margin: 12mm; }
+    html, body { background: #fff; color: #000; }
+    body > *:not(#printArea) { display: none !important; }
+    #printArea { display: block; font-family: "Segoe UI", system-ui, sans-serif; }
+    #printArea * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .print-page { break-after: page; page-break-after: always; }
+    .print-page:last-child { break-after: auto; page-break-after: auto; }
+    .print-page .ph { display: flex; justify-content: space-between; align-items: baseline;
+      border-bottom: 1px solid #999; padding: 0 0 4px; margin-bottom: 6px; }
+    .print-page h1 { font-size: 14pt; margin: 0; }
+    .print-page h2 { font-size: 12pt; margin: 0; }
+    .print-page .sub { font-size: 8.5pt; color: #444; margin: 0 0 6px; }
+    .print-page img { display: block; max-width: 100%; max-height: 215mm; margin: 0 auto; }
+    .print-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 6px; font-size: 8.5pt; }
+    .print-legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .print-legend i { width: 11px; height: 11px; border: 1px solid #555; display: inline-block; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand"><h1>Spaceship <span>Designer</span></h1><div class="subtitle">For Space Engineers</div></div>
+  <input type="text" id="projName" maxlength="40" aria-label="Project name">
+  <a class="btn-link" href="help.html" title="Open the user guide">? Help</a>
+  <div class="spacer"></div>
+  <button id="btnExport">Save to JSON</button>
+  <button id="btnImport">Load JSON</button>
+  <input type="file" id="fileIn" accept=".json,application/json" hidden>
+  <button id="btnNew" class="danger">New project</button>
+</header>
+
+<main>
+  <!-- LEFT COLUMN: blocks, palette, length -->
+  <section class="col">
+    <div class="panel">
+      <h2>Create block</h2>
+      <div class="field">
+        <label for="blockName">Block name</label>
+        <input type="text" id="blockName" maxlength="25" placeholder="e.g. Heavy Armor">
+        <div class="counter" id="nameCount">0/25</div>
+      </div>
+      <div class="field">
+        <label for="blockColor">Block color</label>
+        <div class="color-row">
+          <input type="color" id="blockColor" value="#7a8a9c">
+          <div class="preview" aria-live="polite">
+            <div class="swatch" id="pvSwatch"></div>
+            <div class="meta"><b id="pvName">—</b><code id="pvHex"></code></div>
+          </div>
+        </div>
+      </div>
+      <div class="btns">
+        <button id="blockSave" class="primary">Save</button>
+        <button id="blockEdit">Edit</button>
+      </div>
+      <p class="hint" id="blockHint"></p>
+    </div>
+
+    <div class="panel">
+      <h2>Block palette</h2>
+      <div id="palette"></div>
+      <div class="pager" id="pager" hidden>
+        <button class="icon" id="pFirst" title="First page">⏮</button>
+        <button class="icon" id="pPrev" title="Previous page">◀</button>
+        <div class="pinfo">Page <b id="pNum"></b> / <b id="pMax"></b></div>
+        <button class="icon" id="pNext" title="Next page">▶</button>
+        <button class="icon" id="pLast" title="Last page">⏭</button>
+      </div>
+      <div class="lib-info" id="libInfo"></div>
+      <div class="btns" style="margin-top:10px">
+        <button id="palExport" title="Save the whole block library to a JSON file">Save palette</button>
+        <button id="palImport" title="Load a block library from a palette or project JSON file">Load palette</button>
+      </div>
+      <input type="file" id="palFileIn" accept=".json,application/json" hidden>
+      <h2 class="sep">Tool</h2>
+      <div class="seg" id="toolSeg">
+        <button data-tool="paint" class="on">Brush (B)</button>
+        <button data-tool="erase">Eraser (E)</button>
+      </div>
+      <div class="checks">
+        <label><input type="checkbox" id="optMirror"> Left–right symmetry</label>
+        <label><input type="checkbox" id="optOnion"> Show previous layer</label>
+      </div>
+      <h2 class="sep">Build direction</h2>
+      <div class="seg" id="dirSeg">
+        <button data-dir="bow" class="on" title="Previous layer = the one on the bow side (N−1)">Bow → Stern</button>
+        <button data-dir="stern" title="Previous layer = the one on the stern side (N+1)">Stern → Bow</button>
+      </div>
+      <h2 class="sep">Ship length (layers)</h2>
+      <div class="seg" id="lenSeg"></div>
+    </div>
+  </section>
+
+  <!-- CENTER: layer editor -->
+  <section class="panel">
+    <h2>Layer — cross-section (view from bow to stern)</h2>
+    <div class="navbar">
+      <button class="icon" id="lFirst" title="First layer (bow)">⏮</button>
+      <button class="icon" id="lPrev" title="Previous layer">◀</button>
+      <div class="pos">Layer <input type="number" id="lNum" min="1"> / <span id="lMax"></span></div>
+      <button class="icon" id="lNext" title="Next layer">▶</button>
+      <button class="icon" id="lLast" title="Last layer (stern)">⏭</button>
+      <span class="badge" id="lBadge"></span>
+    </div>
+    <div class="canvas-wrap"><canvas id="layerCanvas"></canvas></div>
+    <div class="coords" id="coords"></div>
+    <div class="notes-field">
+      <div class="notes-head">
+        <label for="layerNotes">Layer notes</label>
+        <span class="counter" id="notesCount">0/256</span>
+      </div>
+      <textarea id="layerNotes" maxlength="256" rows="2" placeholder="e.g. rotor / hinge swing range" readonly></textarea>
+    </div>
+    <div class="btns">
+      <button id="layerSave" class="primary">Save</button>
+      <button id="layerEdit">Edit</button>
+      <button id="layerCopy" title="Load the previous layer (according to the build direction) into the editor">Copy previous</button>
+      <button id="layerCopyFrom" title="Load any saved layer into the editor">Copy from layer…</button>
+      <button id="layerDelete" class="danger">Delete</button>
+    </div>
+  </section>
+
+  <!-- RIGHT COLUMN: top view -->
+  <section class="panel">
+    <h2>Top view</h2>
+    <div class="navbar">
+      <button class="icon" id="vTop" title="Highest level">⤒</button>
+      <button class="icon" id="vUp" title="Level up">▲</button>
+      <div class="pos">Level <b id="vNum"></b> / 33</div>
+      <button class="icon" id="vDown" title="Level down">▼</button>
+      <button class="icon" id="vBottom" title="Lowest level">⤓</button>
+    </div>
+    <div class="end-label">▲ Bow</div>
+    <div class="top-scroll" id="topScroll"><canvas id="topCanvas"></canvas></div>
+    <div class="end-label">▼ Stern</div>
+    <p class="hint" id="topHint">Click a row to open that layer in the editor.</p>
+    <div class="print-row">
+      <label><input type="checkbox" id="optSkipEmpty" checked> Skip empty levels</label>
+      <button id="btnPrint" title="Print every top-view level, lowest to highest (choose “Save as PDF” in the print dialog)">Print to PDF</button>
+    </div>
+  </section>
+</main>
+
+<div id="toast" role="status"></div>
+<div id="printArea"></div>
+
+<!-- Non-modal on purpose: the top view stays clickable to pick a layer -->
+<dialog id="copyDlg" aria-labelledby="copyDlgTitle">
+  <form id="copyForm" method="dialog">
+    <h3 id="copyDlgTitle">Copy from layer</h3>
+    <p class="dlg-text">Enter the number of a saved layer to copy into layer <b id="copyTarget"></b>.
+      Layer numbers are shown in the top view — you can also click a row there.</p>
+    <label for="copyNum">Source layer</label>
+    <input type="number" id="copyNum" min="1" required>
+    <p class="dlg-status" id="copyStatus"></p>
+    <div class="btns">
+      <button type="button" id="copyCancel">Cancel</button>
+      <button type="submit" id="copyOk" class="primary">Copy</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+'use strict';
+const N = 33, CELLS = N * N, SLOTS = 10, LENGTHS = [25, 50, 75, 100, 125];
+const MAX_BLOCKS = 990;   // library limit (99 pages)
+const STORE = 'se-ship-designer-v1';
+const LC = 18;   // px per cell in the layer editor
+const TC = 11;   // px per cell in the top view
+const $ = id => document.getElementById(id);
+const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const COL = {
+  empty: css('--cell-empty'), line: css('--grid-line'), center: css('--grid-center'),
+  accent: css('--accent'), silhouette: css('--silhouette'),
+};
+
+/* ---------- State ---------- */
+// palette = block library; its length is always a multiple of SLOTS (one page = SLOTS slots)
+// direction: 'bow' = building bow → stern (previous = N−1), 'stern' = stern → bow (previous = N+1)
+// notes: { layerNumber: text } — free-text remarks per layer (e.g. rotor / hinge swing range)
+const freshState = () => ({ name: 'New ship', length: 25, direction: 'bow', palette: Array(SLOTS).fill(null), layers: {}, notes: {} });
+const MAX_NOTES = 256;
+let state = freshState();
+const ui = {
+  layer: 1, editing: false, dirty: false, draft: null,
+  brush: 0, page: 0, tool: 'paint', row: 0,      // row 0 = highest level
+  blockEditSlot: null, hover: -1, mirror: false, onion: false,
+  picking: false,                                // "Copy from layer" dialog open → layer numbers in top view
+  draftNotes: '',                                // notes being edited for the current layer
+};
+const pageCount = () => state.palette.length / SLOTS;
+// "Previous" layer in the current build direction, or 0 when there is none
+const prevLayerNo = () => {
+  const n = state.direction === 'stern' ? ui.layer + 1 : ui.layer - 1;
+  return n >= 1 && n <= state.length ? n : 0;
+};
+const newLayer = () => new Int16Array(CELLS).fill(-1);
+
+/* ---------- Serialization ---------- */
+function toJSON() {
+  // a layer is exported when it has blocks or notes (a notes-only layer has all cells -1)
+  const nums = [...new Set([...Object.keys(state.layers), ...Object.keys(state.notes)].map(Number))].sort((a, b) => a - b);
+  const layers = nums.map(n => {
+    const d = state.layers[n] || newLayer(), rows = [];
+    for (let y = 0; y < N; y++) rows.push(Array.from(d.slice(y * N, y * N + N)));
+    return state.notes[n] ? { layer: n, notes: state.notes[n], rows } : { layer: n, rows };
+  });
+  return {
+    app: 'se-ship-designer', version: 2, name: state.name, gridSize: N,
+    length: state.length, direction: state.direction,
+    orientation: 'layer 1 = bow; row 0 = top; cell = palette index or -1',
+    palette: state.palette, layers,
+  };
+}
+
+// Normalizes a palette array: valid blocks kept, length padded to whole pages.
+function parsePalette(arr) {
+  if (!Array.isArray(arr)) throw new Error('Missing block palette.');
+  const size = Math.min(MAX_BLOCKS, Math.max(SLOTS, Math.ceil(arr.length / SLOTS) * SLOTS));
+  return Array.from({ length: size }, (_, i) => {
+    const b = arr[i];
+    return b && typeof b.name === 'string' && /^#[0-9a-f]{6}$/i.test(b.color)
+      ? { name: b.name.slice(0, 25), color: b.color.toLowerCase() } : null;
+  });
+}
+
+function fromJSON(o) {
+  if (!o || typeof o !== 'object') throw new Error('Invalid file format.');
+  if (!LENGTHS.includes(o.length)) throw new Error('Invalid ship length.');
+  const palette = parsePalette(o.palette), size = palette.length;
+  const layers = {}, notes = {};
+  for (const L of Array.isArray(o.layers) ? o.layers : []) {
+    const n = L && L.layer;
+    if (!Number.isInteger(n) || n < 1 || n > o.length) continue;
+    if (!Array.isArray(L.rows) || L.rows.length !== N) throw new Error(`Layer ${n}: wrong size.`);
+    const d = newLayer();
+    let any = false;
+    L.rows.forEach(r => {
+      if (!Array.isArray(r) || r.length !== N) throw new Error(`Layer ${n}: wrong size.`);
+    });
+    L.rows.forEach((r, y) => r.forEach((v, x) => {
+      if (Number.isInteger(v) && v >= 0 && v < size) { d[y * N + x] = v; any = true; }
+    }));
+    if (any) layers[n] = d;
+    const note = typeof L.notes === 'string' ? L.notes.trim().slice(0, MAX_NOTES) : '';
+    if (note) notes[n] = note;
+  }
+  return { name: String(o.name || 'Ship').slice(0, 40), length: o.length,
+    direction: o.direction === 'stern' ? 'stern' : 'bow', palette, layers, notes };
+}
+
+const stringify = obj => JSON.stringify(obj, null, 2)
+  .replace(/\[\s*(-?\d+(?:,\s*-?\d+)*)\s*\]/g, (_, g) => '[' + g.replace(/\s+/g, '') + ']');
+
+function persist() {
+  try { localStorage.setItem(STORE, JSON.stringify(toJSON())); } catch (e) { /* storage unavailable */ }
+}
+
+/* ---------- Helpers ---------- */
+let toastTimer;
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+function setupCanvas(c, w, h) {
+  const d = window.devicePixelRatio || 1;
+  c.width = Math.round(w * d); c.height = Math.round(h * d);
+  const ctx = c.getContext('2d'); ctx.setTransform(d, 0, 0, d, 0, 0); return ctx;
+}
+const colorOf = v => (v >= 0 && state.palette[v]) ? state.palette[v].color : null;
+const layerData = n => (ui.editing && n === ui.layer) ? ui.draft : state.layers[n];
+const isEmpty = d => !d || d.every(v => v < 0);
+
+/* ---------- Layer editor ---------- */
+const lc = $('layerCanvas');
+const lctx = setupCanvas(lc, N * LC, N * LC);
+
+function drawLayer() {
+  const ctx = lctx, S = N * LC;
+  const data = layerData(ui.layer);
+  const prev = ui.onion ? state.layers[prevLayerNo()] : null;
+  ctx.fillStyle = COL.empty; ctx.fillRect(0, 0, S, S);
+  for (let i = 0; i < CELLS; i++) {
+    const x = (i % N) * LC, y = ((i / N) | 0) * LC;
+    const c = data ? colorOf(data[i]) : null;
+    if (c) { ctx.fillStyle = c; ctx.fillRect(x, y, LC, LC); }
+    else if (prev) {
+      const pc = colorOf(prev[i]);
+      if (pc) { ctx.globalAlpha = .22; ctx.fillStyle = pc; ctx.fillRect(x, y, LC, LC); ctx.globalAlpha = 1; }
+    }
+  }
+  drawGrid(ctx, N, N, LC);
+  // level currently shown in the top view
+  ctx.strokeStyle = COL.accent; ctx.globalAlpha = .55; ctx.setLineDash([4, 3]); ctx.lineWidth = 1;
+  ctx.strokeRect(0.5, ui.row * LC + 0.5, S - 1, LC - 1);
+  ctx.setLineDash([]); ctx.globalAlpha = 1;
+  // symmetry axis through the middle of the center column
+  if (ui.mirror) {
+    ctx.strokeStyle = COL.accent; ctx.lineWidth = 2; ctx.setLineDash([8, 5]);
+    ctx.beginPath(); ctx.moveTo(S / 2, 0); ctx.lineTo(S / 2, S); ctx.stroke();
+    ctx.setLineDash([]); ctx.lineWidth = 1;
+  }
+  // cursor highlight
+  if (ui.hover >= 0 && ui.editing) {
+    const hx = ui.hover % N, hy = (ui.hover / N) | 0;
+    ctx.strokeStyle = '#fff'; ctx.lineWidth = 2;
+    ctx.strokeRect(hx * LC + 1, hy * LC + 1, LC - 2, LC - 2);
+    if (ui.mirror && hx !== N - 1 - hx) {
+      ctx.globalAlpha = .5; ctx.strokeRect((N - 1 - hx) * LC + 1, hy * LC + 1, LC - 2, LC - 2); ctx.globalAlpha = 1;
+    }
+    ctx.lineWidth = 1;
+  }
+}
+
+function drawGrid(ctx, cols, rows, cs) {
+  const mid = (N - 1) / 2;
+  ctx.lineWidth = 1;
+  for (let x = 0; x <= cols; x++) {
+    ctx.strokeStyle = (x === mid || x === mid + 1) ? COL.center : COL.line;
+    ctx.beginPath(); ctx.moveTo(x * cs + .5, 0); ctx.lineTo(x * cs + .5, rows * cs); ctx.stroke();
+  }
+  for (let y = 0; y <= rows; y++) {
+    ctx.strokeStyle = (rows === N && (y === mid || y === mid + 1)) ? COL.center : COL.line;
+    ctx.beginPath(); ctx.moveTo(0, y * cs + .5); ctx.lineTo(cols * cs, y * cs + .5); ctx.stroke();
+  }
+}
+
+function cellFromEvent(e, canvas, cols, rows) {
+  const r = canvas.getBoundingClientRect();
+  const x = Math.floor((e.clientX - r.left) / r.width * cols);
+  const y = Math.floor((e.clientY - r.top) / r.height * rows);
+  return (x < 0 || y < 0 || x >= cols || y >= rows) ? null : { x, y };
+}
+
+let painting = false, paintVal = -1;
+function paintAt(e) {
+  const c = cellFromEvent(e, lc, N, N);
+  if (!c) return;
+  const targets = [c.y * N + c.x];
+  if (ui.mirror) targets.push(c.y * N + (N - 1 - c.x));
+  let changed = false;
+  for (const i of targets) if (ui.draft[i] !== paintVal) { ui.draft[i] = paintVal; changed = true; }
+  if (changed) { if (!ui.dirty) { ui.dirty = true; renderLayerStatus(); } drawLayer(); drawTop(); }
+}
+
+lc.addEventListener('pointerdown', e => {
+  if (!ui.editing) { toast('Click "Edit" to edit this layer.'); return; }
+  e.preventDefault();
+  const erase = ui.tool === 'erase' || e.button === 2;
+  if (!erase && !state.palette[ui.brush]) { toast('Select a saved block from the palette (or create a new one).'); return; }
+  paintVal = erase ? -1 : ui.brush;
+  painting = true; lc.setPointerCapture(e.pointerId); paintAt(e);
+});
+lc.addEventListener('pointermove', e => {
+  const c = cellFromEvent(e, lc, N, N);
+  const h = c ? c.y * N + c.x : -1;
+  if (h !== ui.hover) {
+    ui.hover = h;
+    $('coords').textContent = c ? `X: ${c.x + 1}  ·  Level: ${N - c.y}` : '';
+    if (!painting) drawLayer();
+  }
+  if (painting) paintAt(e);
+});
+lc.addEventListener('pointerleave', () => { ui.hover = -1; $('coords').textContent = ''; drawLayer(); });
+['pointerup', 'pointercancel'].forEach(ev => lc.addEventListener(ev, () => { painting = false; }));
+lc.addEventListener('contextmenu', e => e.preventDefault());
+
+function goToLayer(n) {
+  n = Math.max(1, Math.min(state.length, n | 0));
+  if (n === ui.layer) { renderLayerNav(); return; }
+  if (ui.editing && ui.dirty &&
+      !confirm(`Layer ${ui.layer} has unsaved changes. Discard them?`)) { renderLayerNav(); return; }
+  ui.editing = false; ui.dirty = false; ui.draft = null; ui.layer = n;
+  renderLayerNav(); drawLayer(); drawTop(); scrollTopToLayer();
+}
+
+/* ---------- Layer notes ---------- */
+const notesEl = $('layerNotes');
+function renderNotes() {
+  const text = ui.editing ? ui.draftNotes : (state.notes[ui.layer] || '');
+  if (notesEl.value !== text) notesEl.value = text;
+  notesEl.readOnly = !ui.editing;
+  notesEl.placeholder = ui.editing || !text ? 'e.g. rotor / hinge swing range' : '';
+  $('notesCount').textContent = `${text.length}/${MAX_NOTES}`;
+  $('notesCount').classList.toggle('full', text.length >= MAX_NOTES);
+}
+notesEl.addEventListener('input', () => {
+  if (!ui.editing) return;
+  ui.draftNotes = notesEl.value.slice(0, MAX_NOTES);
+  $('notesCount').textContent = `${ui.draftNotes.length}/${MAX_NOTES}`;
+  $('notesCount').classList.toggle('full', ui.draftNotes.length >= MAX_NOTES);
+  if (!ui.dirty) { ui.dirty = true; renderLayerStatus(); }
+});
+notesEl.addEventListener('mousedown', () => { if (!ui.editing) toast('Click "Edit" to edit the notes of this layer.'); });
+
+$('lFirst').onclick = () => goToLayer(1);
+$('lPrev').onclick = () => goToLayer(ui.layer - 1);
+$('lNext').onclick = () => goToLayer(ui.layer + 1);
+$('lLast').onclick = () => goToLayer(state.length);
+$('lNum').onchange = e => goToLayer(parseInt(e.target.value, 10) || ui.layer);
+
+$('layerEdit').onclick = () => {
+  const saved = state.layers[ui.layer];
+  ui.draft = saved ? Int16Array.from(saved) : newLayer();
+  ui.draftNotes = state.notes[ui.layer] || '';
+  ui.editing = true; ui.dirty = false;
+  renderLayerNav(); drawLayer();
+};
+$('layerSave').onclick = () => {
+  if (!ui.editing) return;
+  if (isEmpty(ui.draft)) delete state.layers[ui.layer];
+  else state.layers[ui.layer] = Int16Array.from(ui.draft);
+  const note = ui.draftNotes.trim();
+  if (note) state.notes[ui.layer] = note; else delete state.notes[ui.layer];
+  ui.editing = false; ui.dirty = false; ui.draft = null;
+  persist(); renderLayerNav(); drawLayer(); drawTop();
+  toast(`Layer ${ui.layer} saved.`);
+};
+// Loads saved layer n into the editor draft; returns true when copied.
+function copyLayerIntoDraft(n) {
+  const src = state.layers[n];
+  if (!src) { toast(`Layer ${n} is empty — nothing to copy.`); return false; }
+  if (!isEmpty(ui.draft) && !confirm(`Replace the editor content with layer ${n}?`)) return false;
+  ui.draft = Int16Array.from(src); ui.dirty = true;
+  renderLayerNav(); drawLayer(); drawTop();
+  toast(`Layer ${n} copied into layer ${ui.layer} — click "Save" to keep it.`);
+  return true;
+}
+$('layerCopy').onclick = () => { const n = prevLayerNo(); if (n) copyLayerIntoDraft(n); };
+$('layerDelete').onclick = () => {
+  if (!confirm(`Delete the content and notes of layer ${ui.layer}?`)) return;
+  delete state.layers[ui.layer];
+  delete state.notes[ui.layer];
+  ui.editing = false; ui.dirty = false; ui.draft = null;
+  persist(); renderLayerNav(); drawLayer(); drawTop();
+  toast(`Layer ${ui.layer} deleted.`);
+};
+
+function renderLayerStatus() {
+  const b = $('lBadge');
+  if (ui.editing) { b.className = 'badge editing'; b.textContent = ui.dirty ? 'Editing • unsaved' : 'Editing'; }
+  else if (state.layers[ui.layer] || state.notes[ui.layer]) { b.className = 'badge saved'; b.textContent = 'Saved'; }
+  else { b.className = 'badge'; b.textContent = 'Empty'; }
+}
+function renderLayerNav() {
+  $('lNum').value = ui.layer; $('lNum').max = state.length; $('lMax').textContent = state.length;
+  $('lFirst').disabled = $('lPrev').disabled = ui.layer <= 1;
+  $('lNext').disabled = $('lLast').disabled = ui.layer >= state.length;
+  $('layerSave').disabled = !ui.editing;
+  $('layerEdit').disabled = ui.editing;
+  const prev = prevLayerNo();
+  $('layerCopy').disabled = !ui.editing || !prev;
+  $('layerCopy').textContent = prev ? `Copy previous (${prev})` : 'Copy previous';
+  $('layerCopyFrom').disabled = !ui.editing;
+  if (ui.picking) {
+    if (ui.editing) { $('copyTarget').textContent = ui.layer; updateCopyStatus(); } else closeCopyDialog();
+  }
+  $('layerDelete').disabled = !ui.editing && !state.layers[ui.layer] && !state.notes[ui.layer];
+  lc.classList.toggle('editing', ui.editing);
+  renderLayerStatus();
+  renderNotes();
+}
+
+/* ---------- Top view ---------- */
+const tc = $('topCanvas');
+const TG = 28;   // width of the layer-number gutter shown while picking a layer
+let tctx = null, topSize = '';
+const topGutter = () => ui.picking ? TG : 0;
+
+function drawTop() {
+  const L = state.length, G = topGutter();
+  const size = `${L}x${G}`;
+  if (topSize !== size) { tctx = setupCanvas(tc, G + N * TC, L * TC); topSize = size; }
+  const ctx = tctx;
+  ctx.save();
+  if (G) drawLayerNumbers(ctx, L);
+  ctx.translate(G, 0);
+  ctx.fillStyle = COL.empty; ctx.fillRect(0, 0, N * TC, L * TC);
+  for (let r = 0; r < L; r++) {
+    const d = layerData(r + 1);
+    if (!d) continue;
+    for (let x = 0; x < N; x++) {
+      const c = colorOf(d[ui.row * N + x]);
+      if (c) { ctx.fillStyle = c; ctx.fillRect(x * TC, r * TC, TC, TC); continue; }
+      // silhouette: a block in this column on any other level
+      for (let y = 0; y < N; y++) {
+        if (colorOf(d[y * N + x])) { ctx.fillStyle = COL.silhouette; ctx.fillRect(x * TC, r * TC, TC, TC); break; }
+      }
+    }
+  }
+  drawGrid(ctx, N, L, TC);
+  ctx.strokeStyle = COL.accent; ctx.lineWidth = 2;
+  ctx.strokeRect(1, (ui.layer - 1) * TC + 1, N * TC - 2, TC - 2);
+  const src = pickedLayer();
+  if (src && state.layers[src]) {
+    ctx.strokeStyle = css('--ok'); ctx.setLineDash([3, 2]);
+    ctx.strokeRect(1, (src - 1) * TC + 1, N * TC - 2, TC - 2);
+    ctx.setLineDash([]);
+  }
+  ctx.lineWidth = 1;
+  ctx.restore();
+  $('topHint').textContent = ui.picking ? 'Click a row to pick it as the source layer.' : 'Click a row to open that layer in the editor.';
+  $('topHint').classList.toggle('edit', ui.picking);
+  $('vNum').textContent = N - ui.row;
+  $('vTop').disabled = $('vUp').disabled = ui.row <= 0;
+  $('vBottom').disabled = $('vDown').disabled = ui.row >= N - 1;
+}
+function setRow(r) { ui.row = Math.max(0, Math.min(N - 1, r)); drawTop(); drawLayer(); }
+$('vTop').onclick = () => setRow(0);
+$('vUp').onclick = () => setRow(ui.row - 1);
+$('vDown').onclick = () => setRow(ui.row + 1);
+$('vBottom').onclick = () => setRow(N - 1);
+// Layer numbers in the gutter: saved layers bright, empty dim, current layer and picked source highlighted.
+function drawLayerNumbers(ctx, L) {
+  const src = pickedLayer();
+  ctx.fillStyle = css('--panel'); ctx.fillRect(0, 0, TG, L * TC);
+  ctx.font = '600 9.5px "Segoe UI", sans-serif'; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let n = 1; n <= L; n++) {
+    const y = (n - 1) * TC;
+    if (n === src && state.layers[n]) { ctx.fillStyle = css('--ok'); ctx.fillRect(0, y, TG - 2, TC); }
+    ctx.fillStyle = n === src && state.layers[n] ? '#04140c'
+      : n === ui.layer ? COL.accent
+      : state.layers[n] ? css('--text') : '#4a5a6e';
+    ctx.fillText(n, TG - 5, y + TC / 2 + .5);
+  }
+}
+
+// Top-view cell under the pointer (accounts for the number gutter).
+function topCellFromEvent(e) {
+  const r = tc.getBoundingClientRect(), G = topGutter();
+  const scale = r.width / (G + N * TC);
+  const px = (e.clientX - r.left) / scale - G, py = (e.clientY - r.top) / scale;
+  const y = Math.floor(py / TC), x = Math.floor(px / TC);
+  if (y < 0 || y >= state.length || px >= N * TC) return null;
+  return { x: Math.max(-1, x), y };   // x = -1 → the number gutter
+}
+tc.addEventListener('click', e => {
+  const c = topCellFromEvent(e);
+  if (!c) return;
+  if (ui.picking) { $('copyNum').value = c.y + 1; updateCopyStatus(); $('copyNum').focus(); }
+  else goToLayer(c.y + 1);
+});
+tc.addEventListener('mousemove', e => {
+  const c = topCellFromEvent(e);
+  tc.title = !c ? '' : ui.picking ? `Pick layer ${c.y + 1}` : `Layer ${c.y + 1}, X: ${c.x + 1}`;
+});
+
+/* ---------- Copy from layer (dialog) ---------- */
+const dlg = $('copyDlg');
+const pickedLayer = () => ui.picking ? parseInt($('copyNum').value, 10) || 0 : 0;
+
+function openCopyDialog() {
+  if (!ui.editing) return;
+  ui.picking = true;
+  $('copyTarget').textContent = ui.layer;
+  const prev = prevLayerNo();
+  $('copyNum').max = state.length;
+  $('copyNum').value = prev && state.layers[prev] ? prev : '';
+  dlg.show();
+  updateCopyStatus();
+  $('copyNum').focus(); $('copyNum').select();
+}
+function closeCopyDialog() {
+  if (!ui.picking) return;
+  ui.picking = false;
+  if (dlg.open) dlg.close();
+  drawTop();
+}
+function updateCopyStatus() {
+  const raw = $('copyNum').value, n = parseInt(raw, 10), st = $('copyStatus');
+  let ok = false;
+  if (!raw) { st.className = 'dlg-status'; st.textContent = 'Saved layers are shown in bright numbers.'; }
+  else if (!Number.isInteger(n) || n < 1 || n > state.length) { st.className = 'dlg-status bad'; st.textContent = `Enter a number from 1 to ${state.length}.`; }
+  else if (n === ui.layer) { st.className = 'dlg-status bad'; st.textContent = 'This is the layer you are editing.'; }
+  else if (!state.layers[n]) { st.className = 'dlg-status bad'; st.textContent = `Layer ${n} is empty.`; }
+  else {
+    const count = state.layers[n].reduce((s, v) => s + (colorOf(v) ? 1 : 0), 0);
+    st.className = 'dlg-status ok'; st.textContent = `Layer ${n} — saved, ${count} block${count === 1 ? '' : 's'}.`;
+    ok = true;
+  }
+  $('copyOk').disabled = !ok;
+  drawTop();
+  if (ok) scrollTopTo(n);
+}
+$('layerCopyFrom').onclick = openCopyDialog;
+$('copyNum').addEventListener('input', updateCopyStatus);
+$('copyCancel').onclick = closeCopyDialog;
+$('copyForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const n = pickedLayer();
+  if ($('copyOk').disabled) return;
+  if (copyLayerIntoDraft(n)) closeCopyDialog();
+});
+dlg.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); closeCopyDialog(); } });
+/* ---------- Print top view (PDF) ---------- */
+// Renders one top-view level as a light, print-friendly image with axis labels.
+function renderPrintLevel(row) {
+  const cs = 16, padL = 30, padT = 20, L = state.length, S = 2;
+  const W = padL + N * cs + 1, H = padT + L * cs + 1;
+  const c = document.createElement('canvas');
+  c.width = W * S; c.height = H * S;
+  const ctx = c.getContext('2d'); ctx.scale(S, S);
+  ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, W, H);
+  ctx.translate(padL, padT);
+  for (let r = 0; r < L; r++) {
+    const d = state.layers[r + 1];
+    if (!d) continue;
+    for (let x = 0; x < N; x++) {
+      const col = colorOf(d[row * N + x]);
+      if (col) { ctx.fillStyle = col; ctx.fillRect(x * cs, r * cs, cs, cs); continue; }
+      for (let y = 0; y < N; y++) {
+        if (colorOf(d[y * N + x])) { ctx.fillStyle = '#e4e7eb'; ctx.fillRect(x * cs, r * cs, cs, cs); break; }
+      }
+    }
+  }
+  const mid = (N - 1) / 2;
+  for (let x = 0; x <= N; x++) {
+    ctx.strokeStyle = (x === mid || x === mid + 1) ? '#6b7685' : '#c4cad2';
+    ctx.beginPath(); ctx.moveTo(x * cs + .5, 0); ctx.lineTo(x * cs + .5, L * cs); ctx.stroke();
+  }
+  for (let y = 0; y <= L; y++) {
+    ctx.strokeStyle = y % 5 === 0 ? '#9aa3ae' : '#c4cad2';
+    ctx.beginPath(); ctx.moveTo(0, y * cs + .5); ctx.lineTo(N * cs, y * cs + .5); ctx.stroke();
+  }
+  ctx.fillStyle = '#333'; ctx.font = '9px "Segoe UI", sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+  [1, 5, 10, 15, 17, 20, 25, 30, 33].forEach(x => ctx.fillText(x, (x - .5) * cs, -4));
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (let r = 1; r <= L; r++) if (r === 1 || r % 5 === 0 || r === L) ctx.fillText(r, -5, (r - .5) * cs);
+  return c.toDataURL('image/png');
+}
+
+$('btnPrint').onclick = async () => {
+  if (ui.editing && ui.dirty) toast('Note: unsaved changes in the current layer are not printed.');
+  const skip = $('optSkipEmpty').checked;
+  const levels = [];
+  for (let row = N - 1; row >= 0; row--) {            // lowest level (1) → highest (33)
+    const used = new Set();
+    for (const d of Object.values(state.layers)) for (let x = 0; x < N; x++) {
+      const v = d[row * N + x]; if (colorOf(v)) used.add(v);
+    }
+    if (skip && !used.size) continue;
+    levels.push({ row, used: [...used].sort((a, b) => a - b) });
+  }
+  if (!levels.length) { toast('Nothing to print — no saved blocks on any level.'); return; }
+
+  const area = $('printArea'); area.innerHTML = '';
+  const shipName = state.name.trim() || 'Ship';
+  levels.forEach(({ row, used }, i) => {
+    const page = document.createElement('section'); page.className = 'print-page';
+    const head = document.createElement('div'); head.className = 'ph';
+    const h1 = document.createElement('h1'); h1.textContent = shipName;
+    const h2 = document.createElement('h2'); h2.textContent = `Top view — Level ${N - row} / ${N}`;
+    head.append(h1, h2);
+    const sub = document.createElement('p'); sub.className = 'sub';
+    sub.textContent = `Layer 1 (bow) at top · Layer ${state.length} (stern) at bottom · ` +
+      `columns 1–${N}, center column 17 · Page ${i + 1} of ${levels.length}`;
+    const img = document.createElement('img'); img.src = renderPrintLevel(row); img.alt = `Level ${N - row}`;
+    const legend = document.createElement('div'); legend.className = 'print-legend';
+    for (const v of used) {
+      const s = document.createElement('span'), sw = document.createElement('i');
+      sw.style.background = state.palette[v].color;
+      s.append(sw, `#${slotNum(v)} ${state.palette[v].name}`);
+      legend.append(s);
+    }
+    const other = document.createElement('span'), osw = document.createElement('i');
+    osw.style.background = '#e4e7eb'; other.append(osw, 'Block on another level');
+    legend.append(other);
+    page.append(head, sub, img, legend);
+    area.append(page);
+  });
+  await Promise.all([...area.querySelectorAll('img')].map(im => im.decode().catch(() => {})));
+  window.print();
+};
+window.addEventListener('afterprint', () => { $('printArea').innerHTML = ''; });
+
+const scrollTopToLayer = () => scrollTopTo(ui.layer);
+function scrollTopTo(n) {
+  const box = $('topScroll'), scale = tc.getBoundingClientRect().width / (topGutter() + N * TC) || 1;
+  const y = (n - 1) * TC * scale;
+  if (y < box.scrollTop || y > box.scrollTop + box.clientHeight - TC * scale)
+    box.scrollTop = y - box.clientHeight / 2;
+}
+
+/* ---------- Blocks, palette and library ---------- */
+function updatePreview() {
+  const name = $('blockName').value, color = $('blockColor').value;
+  $('pvSwatch').style.background = color;
+  $('pvName').textContent = name.trim() || '—';
+  $('pvHex').textContent = color.toUpperCase();
+  $('nameCount').textContent = `${name.length}/25`;
+  $('nameCount').classList.toggle('full', name.length >= 25);
+}
+$('blockName').addEventListener('input', updatePreview);
+$('blockColor').addEventListener('input', updatePreview);
+
+const slotKey = i => String((i % SLOTS + 1) % 10);
+const slotNum = i => String(i + 1).padStart(2, '0');
+const slotLabel = i => `slot ${slotNum(i)}, page ${Math.floor(i / SLOTS) + 1}`;
+
+function setBlockHint() {
+  const h = $('blockHint');
+  if (ui.blockEditSlot !== null) {
+    h.className = 'hint edit';
+    h.textContent = `Editing the block on ${slotLabel(ui.blockEditSlot)}. "Save" applies, "Cancel edit" discards.`;
+  } else {
+    h.className = 'hint';
+    h.textContent = 'A new block goes to the selected empty slot or the first free one. When all slots are taken, it is saved to the library on a new page.';
+  }
+  $('blockEdit').textContent = ui.blockEditSlot !== null ? 'Cancel edit' : 'Edit';
+}
+
+function resetBlockForm() {
+  ui.blockEditSlot = null; $('blockName').value = ''; updatePreview(); setBlockHint();
+}
+
+// Picks a slot for a new block: selected empty slot → free slot on the current page →
+// any free slot in the library → first slot of a new library page.
+function findSlotForNewBlock() {
+  if (!state.palette[ui.brush]) return ui.brush;
+  const start = ui.page * SLOTS;
+  for (let i = start; i < start + SLOTS; i++) if (!state.palette[i]) return i;
+  const free = state.palette.findIndex(b => !b);
+  if (free >= 0) return free;
+  if (state.palette.length >= MAX_BLOCKS) return -1;
+  state.palette.push(...Array(SLOTS).fill(null));
+  return state.palette.length - SLOTS;
+}
+
+$('blockSave').onclick = () => {
+  const name = $('blockName').value.trim();
+  if (!name) { toast('Enter a block name.'); $('blockName').focus(); return; }
+  if (name.length > 25) { toast('The name can be at most 25 characters.'); return; }
+  const wasEdit = ui.blockEditSlot !== null;
+  const prevPages = pageCount();
+  const slot = wasEdit ? ui.blockEditSlot : findSlotForNewBlock();
+  if (slot < 0) { toast(`The library is full (${MAX_BLOCKS} blocks). Edit an existing block instead.`); return; }
+  state.palette[slot] = { name, color: $('blockColor').value.toLowerCase() };
+  ui.brush = slot; ui.page = Math.floor(slot / SLOTS);
+  persist(); resetBlockForm(); renderPalette(); drawLayer(); drawTop();
+  if (wasEdit) toast(`Block "${name}" updated.`);
+  else if (pageCount() > prevPages) toast(`Visible slots are full — "${name}" saved to the library (page ${ui.page + 1}).`);
+  else toast(`Block "${name}" added (${slotLabel(slot)}).`);
+};
+
+$('blockEdit').onclick = () => {
+  if (ui.blockEditSlot !== null) { resetBlockForm(); renderPalette(); return; }
+  const b = state.palette[ui.brush];
+  if (!b) { toast('Select a saved block in the palette to edit it.'); return; }
+  ui.blockEditSlot = ui.brush;
+  $('blockName').value = b.name; $('blockColor').value = b.color;
+  updatePreview(); setBlockHint(); renderPalette(); $('blockName').focus();
+};
+
+function renderPalette() {
+  const box = $('palette'); box.innerHTML = '';
+  const start = ui.page * SLOTS;
+  for (let i = start; i < start + SLOTS; i++) {
+    const b = state.palette[i];
+    const btn = document.createElement('button');
+    btn.className = 'slot' + (b ? '' : ' empty') + (i === ui.brush ? ' active' : '');
+    btn.title = b ? `#${slotNum(i)} ${b.name} (${b.color.toUpperCase()}) — key ${slotKey(i)}`
+                  : `#${slotNum(i)} empty slot — key ${slotKey(i)}`;
+    const sw = document.createElement('span');
+    sw.className = 'sw' + (b ? '' : ' empty'); if (b) sw.style.background = b.color;
+    const nm = document.createElement('span'); nm.className = 'nm'; nm.textContent = b ? b.name : 'empty';
+    const key = document.createElement('span'); key.className = 'key';
+    key.textContent = (ui.blockEditSlot === i ? '✎ ' : '') + slotNum(i);
+    btn.append(sw, nm, key);
+    btn.onclick = () => selectSlot(i);
+    box.append(btn);
+  }
+  // pager is shown only once the library has more than one page
+  const pages = pageCount();
+  $('pager').hidden = pages <= 1;
+  $('pNum').textContent = ui.page + 1; $('pMax').textContent = pages;
+  $('pFirst').disabled = $('pPrev').disabled = ui.page <= 0;
+  $('pNext').disabled = $('pLast').disabled = ui.page >= pages - 1;
+  const used = state.palette.filter(Boolean).length;
+  $('libInfo').textContent = `${used} block${used === 1 ? '' : 's'} in library`;
+}
+function setPage(p) {
+  ui.page = Math.max(0, Math.min(pageCount() - 1, p));
+  renderPalette();
+}
+$('pFirst').onclick = () => setPage(0);
+$('pPrev').onclick = () => setPage(ui.page - 1);
+$('pNext').onclick = () => setPage(ui.page + 1);
+$('pLast').onclick = () => setPage(pageCount() - 1);
+
+function selectSlot(i) {
+  ui.brush = i;
+  if (ui.tool === 'erase' && state.palette[i]) setTool('paint');
+  renderPalette();
+}
+
+function setTool(t) {
+  ui.tool = t;
+  document.querySelectorAll('#toolSeg button').forEach(b => b.classList.toggle('on', b.dataset.tool === t));
+}
+document.querySelectorAll('#toolSeg button').forEach(b => b.onclick = () => setTool(b.dataset.tool));
+$('optMirror').onchange = e => { ui.mirror = e.target.checked; drawLayer(); };
+$('optOnion').onchange = e => { ui.onion = e.target.checked; drawLayer(); };
+
+/* ---------- Build direction ---------- */
+function renderDirection() {
+  document.querySelectorAll('#dirSeg button').forEach(b => b.classList.toggle('on', b.dataset.dir === state.direction));
+  $('optOnion').parentElement.title = state.direction === 'stern'
+    ? 'Shows the layer on the stern side (N+1)' : 'Shows the layer on the bow side (N−1)';
+}
+document.querySelectorAll('#dirSeg button').forEach(b => b.onclick = () => {
+  if (state.direction === b.dataset.dir) return;
+  state.direction = b.dataset.dir;
+  persist(); renderDirection(); renderLayerNav(); drawLayer();
+  toast(state.direction === 'stern'
+    ? 'Building stern → bow: "previous" = layer on the stern side (N+1).'
+    : 'Building bow → stern: "previous" = layer on the bow side (N−1).');
+});
+
+/* ---------- Ship length ---------- */
+function renderLengths() {
+  const seg = $('lenSeg'); seg.innerHTML = '';
+  LENGTHS.forEach(len => {
+    const b = document.createElement('button');
+    b.textContent = len; b.className = len === state.length ? 'on' : '';
+    b.onclick = () => setLength(len);
+    seg.append(b);
+  });
+}
+function setLength(len) {
+  if (len === state.length) return;
+  const lost = [...Object.keys(state.layers), ...Object.keys(state.notes)].map(Number).filter(n => n > len);
+  if (ui.editing && ui.layer > len) lost.push(ui.layer);
+  const count = new Set(lost).size;
+  if (count && !confirm(`Shortening the ship to ${len} layers will delete the content and notes of ${count} layer${count === 1 ? '' : 's'}. Continue?`)) return;
+  lost.forEach(n => { delete state.layers[n]; delete state.notes[n]; });
+  state.length = len;
+  if (ui.layer > len) { ui.layer = len; ui.editing = false; ui.dirty = false; ui.draft = null; }
+  persist(); renderLengths(); renderLayerNav(); drawLayer(); drawTop();
+}
+
+/* ---------- Project: JSON, new, name ---------- */
+$('projName').addEventListener('input', e => { state.name = e.target.value; persist(); });
+
+$('btnExport').onclick = () => {
+  if (ui.editing && ui.dirty) toast('Note: unsaved changes in the current layer are not included in the file.');
+  download(stringify(toJSON()), state.name.trim() || 'ship');
+};
+
+function download(text, baseName) {
+  const blob = new Blob([text], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = baseName.replace(/[^\p{L}\p{N}_-]+/gu, '_') + '.json';
+  a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+/* ---------- Palette: JSON ---------- */
+$('palExport').onclick = () => {
+  const used = state.palette.filter(Boolean).length;
+  if (!used) { toast('The palette is empty — nothing to save.'); return; }
+  const data = { app: 'se-ship-designer-palette', version: 1, palette: state.palette };
+  download(stringify(data), (state.name.trim() || 'ship') + '_palette');
+};
+$('palImport').onclick = () => $('palFileIn').click();
+$('palFileIn').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f) return;
+  let palette;
+  try {
+    const o = JSON.parse(await f.text());
+    palette = parsePalette(o && o.palette);   // accepts palette files and project files
+  } catch (err) { toast('Load error: ' + (err instanceof SyntaxError ? 'not a valid JSON file.' : err.message)); return; }
+  const count = palette.filter(Boolean).length;
+  if (!count) { toast('The file contains no blocks.'); return; }
+
+  // Painted cells refer to slot numbers — warn if any used slot would change.
+  const used = new Set();
+  for (const d of [...Object.values(state.layers), ui.draft]) if (d) for (const v of d) if (v >= 0) used.add(v);
+  const same = (a, b) => a && b && a.name === b.name && a.color === b.color;
+  const changed = [...used].filter(i => !same(state.palette[i], palette[i])).sort((a, b) => a - b);
+  if (changed.length && !confirm(
+    `Your layers use ${changed.length} slot${changed.length === 1 ? '' : 's'} that will change or become empty ` +
+    `(${changed.slice(0, 8).map(slotNum).join(', ')}${changed.length > 8 ? ', …' : ''}). ` +
+    'Painted cells keep their slot numbers. Replace the palette anyway?')) return;
+
+  state.palette = palette;
+  ui.brush = 0; ui.page = 0;
+  persist(); resetBlockForm(); renderPalette(); drawLayer(); drawTop();
+  toast(`Palette loaded: ${count} block${count === 1 ? '' : 's'}.`);
+};
+$('btnImport').onclick = () => $('fileIn').click();
+$('fileIn').onchange = async e => {
+  const f = e.target.files[0]; e.target.value = '';
+  if (!f) return;
+  try {
+    const s = fromJSON(JSON.parse(await f.text()));
+    if (ui.editing && ui.dirty && !confirm('Discard unsaved changes and load the project?')) return;
+    loadState(s); persist(); toast(`Project "${s.name}" loaded.`);
+  } catch (err) { toast('Load error: ' + err.message); }
+};
+$('btnNew').onclick = () => {
+  if (!confirm('Create a new project? The current project will be cleared (save it to JSON first).')) return;
+  loadState(freshState()); persist();
+};
+
+function loadState(s) {
+  state = s;
+  closeCopyDialog();
+  // start where the build begins: bow (layer 1) or stern (last layer)
+  const start = state.direction === 'stern' ? state.length : 1;
+  Object.assign(ui, { layer: start, editing: false, dirty: false, draft: null, brush: 0, page: 0, row: 0, blockEditSlot: null });
+  $('projName').value = state.name;
+  resetBlockForm(); renderPalette(); renderLengths(); renderDirection(); renderLayerNav(); drawLayer(); drawTop();
+  $('topScroll').scrollTop = 0;
+  scrollTopToLayer();
+}
+
+/* ---------- Keyboard shortcuts ---------- */
+document.addEventListener('keydown', e => {
+  if (e.target.matches('input, textarea') || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (/^[0-9]$/.test(e.key)) selectSlot(ui.page * SLOTS + (parseInt(e.key, 10) + 9) % 10);
+  else if (e.key === 'e' || e.key === 'E') setTool('erase');
+  else if (e.key === 'b' || e.key === 'B') setTool('paint');
+});
+window.addEventListener('beforeunload', e => { if (ui.editing && ui.dirty) e.preventDefault(); });
+
+/* ---------- Start ---------- */
+let initial = freshState();
+try {
+  const raw = localStorage.getItem(STORE);
+  if (raw) initial = fromJSON(JSON.parse(raw));
+} catch (e) { /* empty or corrupted save — start fresh */ }
+loadState(initial);
+</script>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spaceship Designer — Manual de usuario</title>
+<link rel="stylesheet" href="help.css">
+</head>
+<body>
+
+<div class="topbar" id="top">
+  <div class="brand"><h1>Spaceship <span>Designer</span></h1><div class="subtitle">For Space Engineers</div></div>
+  <span style="color:var(--muted)">Manual de usuario</span>
+  <div class="spacer"></div>
+  <nav class="lang" aria-label="Idioma">
+    <a href="help.html" lang="en">EN</a><a href="help_pl.html" lang="pl">PL</a><a href="help_es.html" class="on" lang="es" aria-current="page">ES</a>
+  </nav>
+  <a class="btn primary" href="index.html">← Volver a la aplicación</a>
+</div>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice">
+    <h2>Índice</h2>
+    <ol>
+      <li><a href="#overview">Introducción</a></li>
+      <li><a href="#quick-start">Inicio rápido</a></li>
+      <li><a href="#limitations">Limitaciones del diseño</a></li>
+      <li><a href="#blocks">Creación de bloques</a></li>
+      <li><a href="#palette">Paleta y biblioteca de bloques</a></li>
+      <li><a href="#tools">Herramientas y opciones</a></li>
+      <li><a href="#length">Longitud de la nave</a></li>
+      <li><a href="#layer-editor">Editor de capas</a></li>
+      <li><a href="#top-view">Vista superior</a></li>
+      <li><a href="#print">Imprimir a PDF</a></li>
+      <li><a href="#files">Guardar y cargar</a></li>
+      <li><a href="#shortcuts">Teclado y ratón</a></li>
+      <li><a href="#faq">Consejos y preguntas frecuentes</a></li>
+    </ol>
+    <a class="btn primary" href="index.html">← Volver a la aplicación</a>
+  </nav>
+
+  <article>
+    <section id="overview">
+      <h2><span class="num">1</span>Introducción</h2>
+      <p class="lead">Spaceship Designer es una herramienta 2D para planificar naves de Space Engineers. La nave se diseña
+        sección a sección (capas) de proa a popa y el resultado se comprueba en una vista superior.</p>
+      <div class="note">La interfaz de la aplicación está en inglés. En este manual los nombres de los botones y opciones
+        aparecen tal como se ven en pantalla, p. ej. <b class="ui">Save</b>, para que sea fácil encontrarlos.</div>
+      <p>Sistema de coordenadas usado en la aplicación:</p>
+      <ul>
+        <li><b>Capa (Layer)</b>: una sección transversal de la nave de 33 × 33. La capa 1 es la <b>proa</b> y la última capa es la <b>popa</b>.</li>
+        <li><b>Nivel (Level)</b>: la altura dentro de una capa. El nivel 33 es la fila superior de la cuadrícula y el nivel 1, la inferior.</li>
+        <li><b>X</b>: la columna (1–33). La columna 17 es el eje central de la nave.</li>
+      </ul>
+      <p>La pantalla se divide en estas zonas:</p>
+      <div class="layout-map">
+        <div class="full"><b>Barra de título</b>Nombre del proyecto, Help, Save to JSON, Load JSON, New project</div>
+        <div><b>Columna izquierda</b>Crear bloque · Paleta de bloques · Herramienta · Opciones · Longitud de la nave</div>
+        <div><b>Centro</b>Editor de capas: la sección de 33 × 33 de la capa actual</div>
+        <div><b>Columna derecha</b>Vista superior: un nivel visto desde arriba, imprimir a PDF</div>
+      </div>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="quick-start">
+      <h2><span class="num">2</span>Inicio rápido</h2>
+      <ol>
+        <li>Escribe un nombre para el proyecto en el campo de la barra de título.</li>
+        <li>Elige la <b>longitud de la nave</b> (25–125 capas) y la <b>dirección de construcción</b>: desde la proa o desde la popa.</li>
+        <li>Crea algunos bloques en el panel <b class="ui">Create block</b>, o carga una paleta ya preparada con <b class="ui">Load palette</b>.</li>
+        <li>En el editor de capas haz clic en <b class="ui">Edit</b>, selecciona un bloque de la paleta y pinta en la cuadrícula.</li>
+        <li>Haz clic en <b class="ui">Save</b> para guardar la capa y pasa a la siguiente con <b class="ui">▶</b>.</li>
+        <li>Comprueba la forma en la <b>vista superior</b> y guarda el proyecto con <b class="ui">Save to JSON</b>.</li>
+      </ol>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="limitations">
+      <h2><span class="num">3</span>Limitaciones del diseño</h2>
+      <p>Ten en cuenta que:</p>
+      <ol>
+        <li>Los proyectos no distinguen entre <b>cuadrícula grande</b> y <b>cuadrícula pequeña</b>.</li>
+        <li>Los bloques creados son de <b>tamaño completo</b>; no se distingue entre medios bloques y bloques en ángulo (rampas).</li>
+        <li>Al diseñar bloques móviles, como los <b>pistones</b>, se recomienda usar una de las dos posiciones extremas:
+          <b>2 bloques</b> (retraído) o <b>6 bloques</b> (extendido).</li>
+        <li>No es posible diseñar un bloque con un ángulo determinado (solo en el plano vertical u horizontal). Si los ángulos son necesarios,
+          añade las notas correspondientes a la capa que contiene el <b>rotor</b> o la <b>bisagra</b>.</li>
+      </ol>
+      <div class="note">Las notas se escriben en el campo <b>Layer notes</b> (notas de la capa) bajo la cuadrícula del editor; ver <a href="#layer-editor">Editor de capas</a>.</div>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="blocks">
+      <h2><span class="num">4</span>Creación de bloques</h2>
+      <p>Un bloque es un color con nombre con el que se pinta, p. ej. “Heavy Armor”, “Glass”, “Thruster”.</p>
+      <h3>Nuevo bloque</h3>
+      <ol>
+        <li>Escribe el <b>nombre del bloque</b> (Block name): hasta 25 caracteres (el contador bajo el campo indica cuántos se han usado).</li>
+        <li>Haz clic en el cuadro de color para elegir el <b>color del bloque</b> (Block color). La vista previa muestra el color, el nombre y el código HEX.</li>
+        <li>Haz clic en <b class="ui">Save</b>. El bloque se coloca en la paleta:
+          <ul>
+            <li>en la ranura seleccionada, si está vacía;</li>
+            <li>si no, en la primera ranura libre de la página actual y, después, en cualquier lugar de la biblioteca;</li>
+            <li>si todas las ranuras están ocupadas, en la biblioteca, en una página nueva (ver <a href="#palette">Paleta de bloques</a>).</li>
+          </ul>
+        </li>
+      </ol>
+      <h3>Editar un bloque</h3>
+      <ol>
+        <li>Selecciona el bloque en la paleta.</li>
+        <li>Haz clic en <b class="ui">Edit</b>: el nombre y el color se cargan en el formulario y la ranura se marca con ✎.</li>
+        <li>Haz los cambios y pulsa <b class="ui">Save</b>. Todas las capas que usan ese bloque se actualizan al instante.</li>
+        <li>Para descartar los cambios, haz clic en <b class="ui">Cancel edit</b>.</li>
+      </ol>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="palette">
+      <h2><span class="num">5</span>Paleta y biblioteca de bloques</h2>
+      <p>La paleta muestra 10 ranuras a la vez, numeradas del <code>01</code> al <code>10</code>. Haz clic en una ranura para seleccionarla como
+        bloque activo (aparece con un marco naranja). Al pasar el cursor sobre una ranura se ven su nombre completo, su color y su tecla de acceso rápido.</p>
+      <h3>Páginas de la biblioteca</h3>
+      <p>Cuando todas las ranuras visibles están ocupadas, los nuevos bloques se guardan en la biblioteca en páginas adicionales. En cuanto hay más de una página,
+        aparecen controles de paginación bajo la paleta:</p>
+      <ul>
+        <li><b class="ui">⏮</b> primera página, <b class="ui">◀</b> anterior, <b class="ui">▶</b> siguiente, <b class="ui">⏭</b> última.</li>
+        <li>La numeración continúa entre páginas: la página 2 contiene las ranuras <code>11</code>–<code>20</code>, la página 3 las <code>21</code>–<code>30</code>, etc.</li>
+        <li>El contador bajo la paleta indica cuántos bloques hay en la biblioteca (máx. 990).</li>
+      </ul>
+      <h3>Guardar y cargar una paleta</h3>
+      <ul>
+        <li><b class="ui">Save palette</b>: guarda toda la biblioteca (todas las páginas) en <code>&lt;proyecto&gt;_palette.json</code>.</li>
+        <li><b class="ui">Load palette</b>: sustituye la paleta actual por la de un archivo. Se aceptan tanto archivos de paleta como archivos de proyecto completos,
+          así que puedes reutilizar la paleta de otra nave.</li>
+      </ul>
+      <div class="note">Las celdas pintadas recuerdan el <b>número de ranura</b>, no el bloque en sí. Si tus capas ya contienen bloques y la nueva
+        paleta tiene algo distinto en esas ranuras, la aplicación muestra las ranuras afectadas y pide confirmación.
+        Recomendación: carga la paleta <b>antes</b> de empezar a pintar.</div>
+      <p>En <code>examples/basic-colors_palette.json</code> se incluye una paleta de ejemplo con seis colores básicos.</p>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="tools">
+      <h2><span class="num">6</span>Herramientas y opciones</h2>
+      <div class="table-wrap"><table>
+        <tr><th>Control</th><th>Función</th></tr>
+        <tr><td><b class="ui">Brush (B)</b></td><td>Pincel: pinta con el bloque seleccionado de la paleta.</td></tr>
+        <tr><td><b class="ui">Eraser (E)</b></td><td>Goma: borra celdas. Con el pincel activo también se puede borrar con el botón derecho del ratón.</td></tr>
+        <tr><td><b>Left–right symmetry</b></td><td>Simetría izquierda–derecha: cada celda pintada o borrada se refleja al otro lado del eje central.
+          Una línea discontinua naranja en el centro de la cuadrícula confirma que la opción está activa. Las celdas de la columna central (17) están sobre el eje y no se duplican.</td></tr>
+        <tr><td><b>Show previous layer</b></td><td>Mostrar la capa anterior (según la dirección de construcción) como una sombra tenue y semitransparente bajo la actual; ayuda a mantener un casco uniforme.</td></tr>
+        <tr><td><b class="ui">Bow → Stern</b> / <b class="ui">Stern → Bow</b></td><td><b>Dirección de construcción (Build direction)</b>: determina qué capa se considera “anterior”:
+          <ul>
+            <li><b>Bow → Stern</b> (por defecto, de proa a popa): anterior = la capa del lado de la proa (N−1).</li>
+            <li><b>Stern → Bow</b> (de popa a proa): anterior = la capa del lado de la popa (N+1).</li>
+          </ul>
+          Afecta a <b class="ui">Copy previous</b> y a <b>Show previous layer</b>. La dirección se guarda en el archivo del proyecto, y un proyecto cargado
+          se abre en la capa donde empieza la construcción (la capa 1 o la última). La numeración de capas no cambia: la capa 1 es siempre la proa.</td></tr>
+      </table></div>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="length">
+      <h2><span class="num">7</span>Longitud de la nave</h2>
+      <p>Elige el número de capas: <b class="ui">25</b> <b class="ui">50</b> <b class="ui">75</b> <b class="ui">100</b> <b class="ui">125</b>.
+        Alargar la nave añade capas vacías por la popa.</p>
+      <div class="note">Acortar la nave elimina las capas que quedan fuera de la nueva longitud. Si alguna contiene bloques, la aplicación pide confirmación antes.</div>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="layer-editor">
+      <h2><span class="num">8</span>Editor de capas</h2>
+      <p>La cuadrícula central de 33 × 33 es una sección transversal de la nave, vista desde la proa hacia la popa.
+        Las líneas algo más claras marcan la columna y la fila centrales. El marco discontinuo naranja indica el nivel que se muestra en la vista superior.
+        Bajo la cuadrícula se ven la coordenada X y el nivel de la celda bajo el cursor.</p>
+      <h3>Navegación</h3>
+      <ul>
+        <li><b class="ui">⏮</b> primera capa (proa), <b class="ui">◀</b> anterior, <b class="ui">▶</b> siguiente, <b class="ui">⏭</b> última capa (popa).</li>
+        <li>Escribe un número en el campo <b>Layer</b> para saltar directamente a esa capa.</li>
+        <li>Hacer clic en una fila de la vista superior también abre esa capa.</li>
+      </ul>
+      <h3>Botones</h3>
+      <div class="table-wrap"><table>
+        <tr><th>Botón</th><th>Función</th></tr>
+        <tr><td><b class="ui">Edit</b></td><td>Desbloquea la capa para pintar. Sin ello la capa es de solo lectura, lo que la protege de cambios accidentales.</td></tr>
+        <tr><td><b class="ui">Save</b></td><td>Guarda la capa en el proyecto y la vuelve a bloquear.</td></tr>
+        <tr><td><b class="ui">Copy previous (N)</b></td><td>(en modo edición) Carga en el editor el contenido de la capa anterior: una forma rápida de alargar un tramo de casco de sección constante.
+          Qué capa es la “anterior” depende de la <a href="#tools">dirección de construcción</a>; su número aparece en el botón.</td></tr>
+        <tr><td><b class="ui">Copy from layer…</b></td><td>(en modo edición) Abre un cuadro de diálogo para copiar <b>cualquier</b> capa guardada, p. ej. para repetir una sección de motores.
+          <ul>
+            <li>Mientras el cuadro está abierto, aparecen los números de capa junto a la vista superior: las capas guardadas en claro, las vacías atenuadas y la capa en edición en naranja.</li>
+            <li>Escribe el número de la capa de origen o haz clic en su fila de la vista superior. La capa elegida se resalta en verde y el cuadro muestra cuántos bloques tiene.</li>
+            <li>Haz clic en <b class="ui">Copy</b> (o pulsa <kbd>Enter</kbd>); <b class="ui">Cancel</b> o <kbd>Esc</kbd> cierra el cuadro.</li>
+          </ul></td></tr>
+        <tr><td><b class="ui">Delete</b></td><td>Vacía toda la capa, incluidas sus notas (tras confirmar).</td></tr>
+      </table></div>
+      <h3>Notas de la capa (Layer notes)</h3>
+      <p>El campo <b>Layer notes</b> bajo la cuadrícula guarda un comentario libre para la capa actual (hasta 256 caracteres; el contador muestra cuántos se usan),
+        p. ej. el rango de giro de un rotor o una bisagra; ver <a href="#limitations">Limitaciones del diseño</a>.</p>
+      <ul>
+        <li>El campo es de solo lectura hasta que haces clic en <b class="ui">Edit</b>; cambiar el texto marca la capa como “unsaved”.</li>
+        <li><b class="ui">Save</b> guarda las notas junto con la capa, también en el archivo JSON del proyecto. Una capa puede tener notas aunque no tenga bloques.</li>
+        <li><b class="ui">Delete</b> borra también las notas. <b class="ui">Copy previous</b> y <b class="ui">Copy from layer…</b> copian solo los bloques, no las notas.</li>
+      </ul>
+      <h3>Estado de la capa</h3>
+      <ul>
+        <li><b>Empty</b>: no hay nada guardado en esta capa.</li>
+        <li><b style="color:var(--ok)">Saved</b>: la capa contiene bloques guardados.</li>
+        <li><b style="color:var(--accent)">Editing</b> / <b style="color:var(--accent)">Editing • unsaved</b>: el modo edición está activo; “unsaved” significa que hay cambios sin guardar.</li>
+      </ul>
+      <div class="note">Si sales de una capa con cambios sin guardar, la aplicación pregunta si quieres descartarlos.</div>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="top-view">
+      <h2><span class="num">9</span>Vista superior</h2>
+      <p>La vista superior muestra un nivel de toda la nave visto desde arriba: 33 columnas de ancho, una fila por capa, la proa arriba y la popa abajo.
+        Por defecto se muestra el nivel más alto (33).</p>
+      <ul>
+        <li><b class="ui">⤒</b> nivel más alto, <b class="ui">▲</b> un nivel arriba, <b class="ui">▼</b> un nivel abajo, <b class="ui">⤓</b> nivel más bajo (1).</li>
+        <li>La capa actual del editor aparece con un marco naranja.</li>
+        <li>Las celdas azul oscuro muestran la <b>silueta</b>: bloques que existen en esa columna en otros niveles, para ayudar a orientarse.</li>
+        <li>Haz clic en cualquier fila para abrir esa capa en el editor.</li>
+      </ul>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="print">
+      <h2><span class="num">10</span>Imprimir a PDF</h2>
+      <p>El botón <b class="ui">Print to PDF</b> bajo la vista superior imprime la vista superior de cada nivel, <b>del nivel más bajo (1) al más alto (33)</b>, un nivel por página A4.</p>
+      <ol>
+        <li>Opcionalmente desmarca <b>Skip empty levels</b> (marcado por defecto; omite los niveles vacíos) si quieres las 33 páginas.</li>
+        <li>Haz clic en <b class="ui">Print to PDF</b>.</li>
+        <li>En el cuadro de impresión del navegador elige <b>Guardar como PDF</b> (o <b>Microsoft Print to PDF</b>) como impresora y guarda el archivo.</li>
+      </ol>
+      <p>Cada página incluye el nombre de la nave, el número de nivel, los números de columna (1–33) y de capa, y una leyenda de los bloques usados en ese nivel.
+        Las celdas gris claro son bloques de otros niveles.</p>
+      <div class="note">Solo se imprimen las capas guardadas: guarda primero la capa que estés editando.
+        En naves largas (125 capas) la cuadrícula se escala a la altura de la página, por lo que las celdas son pequeñas.</div>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="files">
+      <h2><span class="num">11</span>Guardar y cargar</h2>
+      <div class="table-wrap"><table>
+        <tr><th>Botón</th><th>Función</th></tr>
+        <tr><td><b class="ui">Save to JSON</b></td><td>Descarga el proyecto completo (nombre, longitud, paleta y todas las capas guardadas) como <code>&lt;proyecto&gt;.json</code>.</td></tr>
+        <tr><td><b class="ui">Load JSON</b></td><td>Abre un archivo de proyecto y sustituye el proyecto actual.</td></tr>
+        <tr><td><b class="ui">New project</b></td><td>Borra todo y empieza desde cero (tras confirmar).</td></tr>
+        <tr><td><b class="ui">Save palette</b> / <b class="ui">Load palette</b></td><td>Solo la paleta; ver <a href="#palette">Paleta de bloques</a>.</td></tr>
+      </table></div>
+      <div class="note ok">El proyecto actual también se guarda automáticamente en el navegador tras cada cambio y se restaura la próxima vez que abras la aplicación.
+        Es solo una comodidad: guarda las naves importantes como archivos JSON.</div>
+      <h3>Formato del archivo de proyecto</h3>
+<pre>{
+  "app": "se-ship-designer",
+  "version": 2,
+  "name": "Mi nave",
+  "length": 25,
+  "direction": "bow",          // o "stern"
+  "palette": [ { "name": "Heavy Armor", "color": "#7a8a9c" }, null, … ],
+  "layers": [
+    { "layer": 1, "notes": "Rotor: ±45°", "rows": [ [-1,-1,0,0,…], … ] }   // 33 filas × 33 celdas; "notes" opcional
+  ]
+}</pre>
+      <p>Cada celda contiene el índice de la ranura de la paleta (0 = ranura <code>01</code>) o <code>-1</code> si está vacía. La fila 0 es el nivel más alto (33).</p>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="shortcuts">
+      <h2><span class="num">12</span>Teclado y ratón</h2>
+      <div class="table-wrap"><table>
+        <tr><th>Entrada</th><th>Acción</th></tr>
+        <tr><td><kbd>1</kbd> … <kbd>9</kbd>, <kbd>0</kbd></td><td>Seleccionar la ranura 01–10 de la página de paleta mostrada (<kbd>0</kbd> = 10.ª ranura).</td></tr>
+        <tr><td><kbd>B</kbd></td><td>Pincel</td></tr>
+        <tr><td><kbd>E</kbd></td><td>Goma</td></tr>
+        <tr><td>Botón izquierdo del ratón (arrastrar)</td><td>Pintar con la herramienta activa</td></tr>
+        <tr><td>Botón derecho del ratón (arrastrar)</td><td>Borrar</td></tr>
+        <tr><td>Clic en la vista superior</td><td>Abrir esa capa en el editor</td></tr>
+      </table></div>
+      <p>Los atajos no funcionan mientras escribes en un campo de texto.</p>
+      <p class="to-top"><a href="#top">↑ Volver arriba</a></p>
+    </section>
+
+    <section id="faq">
+      <h2><span class="num">13</span>Consejos y preguntas frecuentes</h2>
+      <h3>No puedo pintar en la cuadrícula.</h3>
+      <p>Primero haz clic en <b class="ui">Edit</b>. Comprueba también que la ranura seleccionada de la paleta contenga un bloque (que no esté “empty”).</p>
+      <h3>Mis cambios desaparecieron al cambiar de capa.</h3>
+      <p>Las capas deben guardarse con <b class="ui">Save</b> antes de salir de ellas. La aplicación avisa si hay cambios sin guardar.</p>
+      <h3>¿Cómo construyo rápido un tramo largo de casco?</h3>
+      <p>Guarda una capa, pasa a la siguiente, haz clic en <b class="ui">Edit</b> → <b class="ui">Copy previous</b> → <b class="ui">Save</b> y repite.
+        Si construyes desde la popa, cambia primero la dirección de construcción a <b class="ui">Stern → Bow</b> y avanza con <b class="ui">◀</b>.</p>
+      <h3>¿Cómo repito una sección de otra parte de la nave?</h3>
+      <p>Abre la capa de destino, haz clic en <b class="ui">Edit</b> → <b class="ui">Copy from layer…</b>, elige la capa de origen en la vista superior y haz clic en <b class="ui">Copy</b>.</p>
+      <h3>¿Cómo mantengo la nave simétrica?</h3>
+      <p>Activa <b>Left–right symmetry</b> y pinta solo una mitad: el otro lado se refleja automáticamente.</p>
+      <h3>¿Dónde guarda la aplicación mi trabajo?</h3>
+      <p>En el navegador (automáticamente) y en los archivos JSON que guardes. Borrar los datos del navegador elimina la copia automática, así que guarda archivos JSON con regularidad.</p>
+      <div class="back-row">
+        <a class="btn" href="#top">↑ Volver arriba</a>
+        <a class="btn primary" href="index.html">← Volver a la aplicación</a>
+      </div>
+    </section>
+  </article>
+</div>
+
+</body>
+</html>
